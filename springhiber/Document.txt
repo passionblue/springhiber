@@ -1,0 +1,45 @@
+###  0320 2016
+
+#reference http://hsqldb.org/doc/guide/guide.html
+
+##  Create TABLE automatically from the 
+
+this project is created based on the instruction from http://www.studytrails.com/frameworks/spring/spring-hibernate-jpa.jsp
+but changed to file DB and make table to be created automatically bu setting properties in persistence.xml 
+
+		<property name="url" value="jdbc:hsqldb:file:tempdb;shutdown=true" />
+
+
+         <properties>
+            <property name="hibernate.archive.autodetection" value="class"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>	
+        
+        
+Also removed Initialization() from DBUtil.java
+
+### *.DATA file not created 
+
+when I first tried, there was no data file (*.data). Found the following text from the search
+
+
+The script file contains the definition of tables and other database objects, plus the data for non-cached tables. The log file contains recent changes to the database. The data file contains the data for cached tables and the backup file is a zipped backup of the last known consistent state of the data file. All these files are essential and should never be deleted. If the database has no cached tables, the test.data and test.backup files will not be present. In addition to those files, HSQLDB database may link to any formatted text files, such as CSV lists, anywhere on the disk.
+While the "test" database is operational, a test.log file is used to write the changes made to data. This file is removed at a normal SHUTDOWN. Otherwise (with abnormal shutdown) this file is used at the next startup to redo the changes. A test.lck file is also used to record the fact that the database is open. This is deleted at a normal SHUTDOWN. In some circumstances, a test.data.old is created and deleted afterwards.
+
+therefore, should add  
+
+hsqldb.default_table_type=cached;
+
+to the URL
+
+## *.LOG
+
+Log files are getting deleted with Normal shutdown. So the process is killed, there will be no log file. 
+Log file will be used if data file is corrupted or something. 
+
+-- from the guide    
+hile the "test" catalog is open, a test.log file is used to write the changes made to data. This file is removed at a normal SHUTDOWN. Otherwise (with abnormal shutdown) this file is used at the next startup to redo the changes. A test.lck file is also used to record the fact that the database is open. This is deleted at a normal SHUTDOWN.    
+    
+    

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-4.0.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<import resource="transformers.xml" />	
+
+<!-- 	<bean id="sourceDataSourceMap" class="com.datagen.source.FDataSourceFactory">
+		<property name="dataSourceMap">
+			<map>
+				<entry key="RandomAddressGenerator">
+					<bean class="com.mkyong.common.Person">
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean> -->
+
+
+	<bean id="dataGenerator" class="com.datagen.main.AutositeDataGenerator"
+		init-method="init" >
+		<property name="sourceAssembler" ref="SourceAssembler2" />
+		<property name="transformerFactory" ref="TransformerFactory" />
+		<property name="outputChannelFactory" ref="DeliveryFactory" />
+	</bean>
+
+
+	<bean id="SourceAssembler" class="com.datagen.source.assembler.FDSourceAggregatorByDemo" init-method="init" lazy-init="true">
+
+	</bean>
+
+	<bean id="SourceAssembler2" class="com.datagen.source.assembler.FDSourceAggregatorByXMLConfigImpl" init-method="init" >
+
+	</bean>
+
+	<bean id="DeliveryFactory" class="com.datagen.output.impl.SimpleOutputChannelFactory" init-method="init" >
+
+	</bean>
+	
+</beans>

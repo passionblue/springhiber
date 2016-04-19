@@ -1,0 +1,179 @@
+<DataGen>
+	<Version>1.0</Version>
+	<Timestamp>20160416-14:23:34</Timestamp> <!--  Creation Timestamp -->
+	<ImportGenerate>configuration-pre.xml</ImportGenerate> <!--  -->
+	<Name>Test</Name>
+	<Fields>
+		<Field>
+			<Name>id</Name>
+			<Display>Member ID</Display>
+			<DataType>String</DataType> 
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomStringGenerator</Class>
+				 <Property>
+					<prefixString>-</prefixString>				 
+					<appendingString>-</appendingString>				 
+					<defaultLength>10</defaultLength>
+					<fixedLength>false</fixedLength> <!-- default is true -->
+					<numbersOnly>false</numbersOnly>								
+					<lettersOnly>true</lettersOnly>								
+				 </Property>
+			</DataSource>
+			<Fault>
+				<Type>Empty</Type> <!-- Empty, Anomaly  -->
+				<Ratio>1</Ratio> <!-- percent should be < 100 -->
+				<Anomaly>
+				
+				</Anomaly>
+			</Fault>	
+		</Field>
+		
+		<Field>
+			<Name>nickname</Name>
+			<Display>Nick Name</Display>
+			<Type>String</Type>
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
+			 	<DataAdapter>
+					<Class>com.datagen.source.adapter.FileBasedDataSetAdapter</Class>	
+					<Property>
+						<fileName>data/names.txt</fileName>
+					</Property>		 	
+			 	</DataAdapter>
+			</DataSource>
+		</Field>
+
+		<Field>
+			<Name>lname</Name>
+			<Display>Last Name</Display>
+			<Type>String</Type>
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
+				<Property>
+					<columnToLoadForMultiColumnData>0,10</columnToLoadForMultiColumnData>
+				</Property>
+			 	<DataAdapter>
+					<Class>com.datagen.source.adapter.FileBasedMultiColumnDataSetAdapter</Class>	
+					<Property>
+						<fileName>data/lastnames.txt</fileName>
+						<skipHeader>true</skipHeader>
+					</Property>		 	
+			 	</DataAdapter>
+			</DataSource>
+		</Field>
+
+
+		<Field>
+			<Name>credit_card</Name>
+			<Display>Credit Card</Display>
+			<Type>String</Type>
+			<DataSource>
+				<Class>com.datagen.source.impl.CreditCardNumberGenerator</Class>
+			</DataSource>
+		</Field>
+
+		<!-- Composite field Testing -->
+		
+		<!--  composite from spread sheet -->	
+		<!-- Field>
+			<Name>address</Name>
+			<Display>Address</Display>
+			<Type>Composite</Type> 
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
+			 	<DataAdapter>
+					<Class>com.datagen.source.adapter.FileBasedDataSetAdapter</Class>	
+					<Property>
+						<fileName>data/names.txt</fileName>
+					</Property>		 	
+			 	</DataAdapter>
+			</DataSource>
+		</Field-->
+		
+		<!--  composite from pre-loading -->	
+		<Field>
+			<Name>customer</Name>
+			<Display>Customer</Display>
+			<Type>Composite</Type>
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
+			 	<DataAdapter>
+					<Class>com.datagen.source.adapter.PreloadDatabaseAdapter</Class>	
+					<Property>
+						<fieldNameList>prefix,first_name,last_name</fieldNameList>
+					</Property>		 	
+			 	</DataAdapter>
+			</DataSource>
+		</Field>
+		
+		<!--  composite from internal mixer from external -->	
+		<!-- Field>
+			<Name>customer</Name>
+			<Display>Customer</Display>
+			<Type>Composite</Type>
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
+			 	<DataAdapter>
+					<Class>com.datagen.source.adapter.FileBasedDataSetAdapter</Class>	
+					<Property>
+						<fileName>data/names.txt</fileName>
+					</Property>		 	
+			 	</DataAdapter>
+			</DataSource>
+		</Field-->
+
+		<!--  composite from internal mixer from other fields -->	
+		<!-- Field-->
+			<Name>pattern_test</Name>
+			<Display>Pattern Test</Display>
+			<Type>Custom</Type> <!-- String?? because returned data is string? -->
+			<DataSource>
+				<Class>com.datagen.source.impl.FDCustomCompositeSource</Class>
+				<Property>
+					<pattern>${first_name}, ${last_name}</pattern>
+				</Property>
+			</DataSource>
+		</Field>
+
+
+	</Fields>
+	<Outputs>
+		<Output>
+			<MaxCount>1000</MaxCount> <!-- -1, unlimited, 0 is random -->
+			<Type>CSV</Type>
+			<Delimiter>|</Delimiter>
+			<IncludeHeader>TRUE</IncludeHeader>
+			<Filename>output.csv</Filename>
+			
+		</Output>
+		<Output>
+			<MaxCount>1000</MaxCount> <!-- -1, unlimited, 0 is random -->
+			<Type>Console</Type>
+			<Delimiter>,</Delimiter>
+			<Header>FALSE</Header>
+		</Output>
+<!-- 
+		<Output>
+			<Type>DATABASE</Type>
+			<Table>DATABASE</Table>
+		</Output>
+		<Output>
+			<Type>DATABASE</Type>
+			<Table>DATABASE</Table>
+		</Output>
+		<Output>
+			<Type>JMS</Type>
+		</Output>
+ -->
+
+		<Output>
+			<Type>CUSTOM</Type>
+			<Class></Class>
+			<Formatter></Formatter>
+		</Output>
+
+ 		
+	</Outputs>
+
+
+</DataGen>

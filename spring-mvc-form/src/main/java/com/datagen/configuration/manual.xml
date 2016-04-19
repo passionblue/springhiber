@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataGenerator>
+	<SourceList>
+		<FieldSource>
+			<FieldType></FieldType>
+			<FieldName></FieldName>
+			<DataSource>
+				<DataType>RandomAddressGenerator</DataType> <!--  This will be the type of source generator type that are used to return DataSourceFactory in builder -->
+			</DataSource>
+		</FieldSource>
+		
+	</SourceList>
+
+
+</DataGenerator>

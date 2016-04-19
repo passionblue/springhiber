@@ -54,7 +54,7 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+//	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String index(Model model) {
 		logger.debug("index()");
 		return "redirect:/users";

@@ -47,7 +47,7 @@ public class FileBasedMultiColumnDataSetAdapter extends AbstractDataSetAdapter<S
             if (line == null || StringUtils.isBlank(line.trim()))
                 continue;
             
-            String[] splitted = line.split(dataDelimiter);
+            String[] splitted = line.split(dataDelimiter, -1);
             
             if ( firstLineSkipped ) {
                 dataSet.add(splitted);

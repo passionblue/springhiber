@@ -1,13 +1,18 @@
 <DataGen>
 	<Version>1.0</Version>
 	<Timestamp>20160416-14:23:34</Timestamp> <!--  Creation Timestamp -->
+	<DataSetName>Main</DataSetName>
 	<ImportGenerate>configuration-pre.xml</ImportGenerate> <!--  -->
+	<ImportGenerate>configuration-pre2.xml</ImportGenerate> <!--  -->
+	<ImportGenerate>configuration-pre3.xml</ImportGenerate> <!--  -->
 	<Name>Test</Name>
+	<Count>300000</Count>
 	<Fields>
 		<Field>
 			<Name>id</Name>
 			<Display>Member ID</Display>
 			<DataType>String</DataType> 
+			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
 			<DataSource>
 				<Class>com.datagen.source.impl.FDRandomStringGenerator</Class>
 				 <Property>
@@ -18,14 +23,14 @@
 					<numbersOnly>false</numbersOnly>								
 					<lettersOnly>true</lettersOnly>								
 				 </Property>
+				<Fault>
+					<Class>com.datagen.fault.SimpleFaultStringGenerator</Class>
+	 				<Property>
+						<faultRatioByPercent>99</faultRatioByPercent> <!-- percent should be < 100 -->
+						<faultString></faultString>
+	 				</Property>
+				</Fault>	
 			</DataSource>
-			<Fault>
-				<Type>Empty</Type> <!-- Empty, Anomaly  -->
-				<Ratio>1</Ratio> <!-- percent should be < 100 -->
-				<Anomaly>
-				
-				</Anomaly>
-			</Fault>	
 		</Field>
 		
 		<Field>
@@ -62,7 +67,22 @@
 			</DataSource>
 		</Field>
 
-
+		<Field>
+			<Name>email-company</Name>
+			<Display>Email Carrier</Display>
+			<Type>String</Type>
+			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
+			 	<DataAdapter>
+					<Class>com.datagen.source.adapter.FixedDataSetAdapter</Class>	
+					<Property>
+						<dataString>yahoo.com,gmail.com,hotmail.com,blah.com</dataString>
+					</Property>		 	
+			 	</DataAdapter>
+			</DataSource>
+		</Field>
+		
 		<Field>
 			<Name>credit_card</Name>
 			<Display>Credit Card</Display>
@@ -72,7 +92,9 @@
 			</DataSource>
 		</Field>
 
+		<!-- ================================================================================================= -->
 		<!-- Composite field Testing -->
+		<!-- ================================================================================================= -->
 		
 		<!--  composite from spread sheet -->	
 		<!-- Field>
@@ -94,65 +116,84 @@
 		<Field>
 			<Name>customer</Name>
 			<Display>Customer</Display>
-			<Type>Composite</Type>
+			<Type>Composite</Type> <!-- multiple fields. Underlying fields name will be used in output -->
+			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
 			<DataSource>
 				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
 			 	<DataAdapter>
 					<Class>com.datagen.source.adapter.PreloadDatabaseAdapter</Class>	
 					<Property>
-						<fieldNameList>prefix,first_name,last_name</fieldNameList>
+						<dataSet>Customer2</dataSet>
+						<fieldNameList>prefix2,first_name2,last_name2</fieldNameList>
 					</Property>		 	
 			 	</DataAdapter>
 			</DataSource>
 		</Field>
 		
-		<!--  composite from internal mixer from external -->	
-		<!-- Field>
-			<Name>customer</Name>
+		<Field>
+			<Name>customer3</Name>
 			<Display>Customer</Display>
-			<Type>Composite</Type>
+			<Type>Composite</Type><!-- multiple fields. Underlying fields name will be used in output -->
+			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
 			<DataSource>
 				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
 			 	<DataAdapter>
-					<Class>com.datagen.source.adapter.FileBasedDataSetAdapter</Class>	
+					<Class>com.datagen.source.adapter.PreloadDatabaseAdapter</Class>	
 					<Property>
-						<fileName>data/names.txt</fileName>
+						<dataSet>Customer3</dataSet>
+						<fieldNameList>prefix3</fieldNameList>
 					</Property>		 	
 			 	</DataAdapter>
 			</DataSource>
-		</Field-->
-
+		</Field>		
+		
 		<!--  composite from internal mixer from other fields -->	
-		<!-- Field-->
+		<Field>
 			<Name>pattern_test</Name>
 			<Display>Pattern Test</Display>
-			<Type>Custom</Type> <!-- String?? because returned data is string? -->
+			<Type>Custom</Type> 
+			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
 			<DataSource>
 				<Class>com.datagen.source.impl.FDCustomCompositeSource</Class>
 				<Property>
-					<pattern>${first_name}, ${last_name}</pattern>
+					<type>regex</type>
+					<arg>[first_name2] [last_name2] [prefix3]</arg>
+				</Property>
+			</DataSource>
+		</Field>		
+
+		<Field>
+			<Name>pattern_test2</Name>
+			<Display>Email</Display>
+			<Type>Custom</Type> 
+			<DataSource>
+				<Class>com.datagen.source.impl.FDCustomCompositeSource</Class>
+				<Property>
+					<type>regex</type>
+					<arg>[first_name2].[last_name2]@[email-company]</arg>
 				</Property>
 			</DataSource>
 		</Field>
 
-
 	</Fields>
 	<Outputs>
 		<Output>
-			<MaxCount>1000</MaxCount> <!-- -1, unlimited, 0 is random -->
+			<MaxCount>30</MaxCount> <!-- -1, unlimited, 0 is random -->
 			<Type>CSV</Type>
-			<Delimiter>|</Delimiter>
+			<Delimiter>,</Delimiter>
 			<IncludeHeader>TRUE</IncludeHeader>
 			<Filename>output.csv</Filename>
 			
 		</Output>
+		
+<!-- 		
 		<Output>
-			<MaxCount>1000</MaxCount> <!-- -1, unlimited, 0 is random -->
+			<MaxCount>1000</MaxCount> 
 			<Type>Console</Type>
 			<Delimiter>,</Delimiter>
 			<Header>FALSE</Header>
 		</Output>
-<!-- 
+
 		<Output>
 			<Type>DATABASE</Type>
 			<Table>DATABASE</Table>

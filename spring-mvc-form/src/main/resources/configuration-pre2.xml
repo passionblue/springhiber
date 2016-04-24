@@ -1,0 +1,77 @@
+<DataGen>
+	<Version>1.0</Version>
+	<DataSetName>Customer2</DataSetName><!-- This required for PreloadDatabaseAdapter in main config -->
+	<ImportGenerate></ImportGenerate> <!--  -->
+	<Count>1000</Count> <!-- -1, unlimited, 0 is random -->
+	<Fields>
+
+		<Field>
+			<Name>prefix2</Name>
+			<Display>Prefix2</Display>
+			<Type>String</Type>
+			<Disable>false</Disable> <!-- disable totally. if set, should not be referred in main configs -->
+			<ExcludeInOutput>true</ExcludeInOutput> <!-- make invisible in output. not effect when write to memory storage-->
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
+			 	<DataAdapter>
+					<Class>com.datagen.source.adapter.FixedDataSetAdapter</Class>	
+					<Property>
+						<dataString>Mr,Mrs,Ms</dataString>
+					</Property>		 	
+			 	</DataAdapter>
+			</DataSource>
+		</Field>
+			
+		<Field>
+			<Name>first_name2</Name>
+			<Display>First Name2</Display>
+			<DataType>String</DataType> 
+			<Disable>false</Disable> <!-- disable totally. if set, should not be referred in main configs -->
+			<ExcludeInOutput>true</ExcludeInOutput> <!-- make invisible in output. not effect when write to memory storage-->
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomStringGenerator</Class>
+				 <Property>
+					<prefixString>-</prefixString>				 
+					<appendingString>-</appendingString>				 
+					<defaultLength>10</defaultLength>
+					<fixedLength>false</fixedLength> <!-- default is true -->
+					<numbersOnly>false</numbersOnly>								
+					<lettersOnly>true</lettersOnly>								
+				 </Property>
+			</DataSource>
+			<Fault>
+				<Type>Empty</Type> <!-- Empty, Anomaly  -->
+				<Ratio>1</Ratio> <!-- percent should be < 100 -->
+				<Anomaly>
+				
+				</Anomaly>
+			</Fault>	
+		</Field>
+		
+		<Field>
+			<Name>last_name2</Name>
+			<Display>Last Name2</Display>
+			<Type>String</Type>
+			<Disable>false</Disable> <!-- disable totally. if set, should not be referred in main configs -->
+			<ExcludeInOutput>true</ExcludeInOutput> <!-- make invisible in output. not effect when write to memory storage-->
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
+			 	<DataAdapter>
+					<Class>com.datagen.source.adapter.FileBasedDataSetAdapter</Class>	
+					<Property>
+						<fileName>data/names.txt</fileName>
+					</Property>		 	
+			 	</DataAdapter>
+			</DataSource>
+		</Field>
+
+	</Fields>
+	<Outputs>
+		<Output>
+			<Type>MEMORY</Type>
+			<MaxCount>10</MaxCount>
+		</Output>
+	</Outputs>
+
+
+</DataGen>

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapperImpl;
 
 import com.datagen.FDataSource;
+import com.datagen.fault.FaultGenerater;
 import com.datagen.source.FDataSourceAdapter;
 import com.datagen.util.ConfigUtils;
 
@@ -37,6 +38,18 @@ public class FDSourceFactoryByXMLConfiguration {
                 }
             }
         }
+        
+        HierarchicalConfiguration falseConfigs = (HierarchicalConfiguration) conf.subset("Fault");
+        
+        if ( falseConfigs != null ) {
+            FaultGenerater faultGen = (FaultGenerater)createInstanceFromConfig(falseConfigs);
+            if ( faultGen != null) {
+                ds.setFaultGenerater(faultGen);
+                m_logger.info("FaultGenerator created for DataSource " + ds.getFieldName() + ", " + ds.getClass().getSimpleName());
+            }
+        }        
+        
+        
         return ds;
 
     }

@@ -24,6 +24,7 @@ public class PreloadDatabaseAdapter  extends AbstractDataSetAdapter<List<FData>>
     
     private CacheInterface cacheInterface = MemoryCache.instance;
 
+    private String dataSet;
     private String fieldNameList;
     private List<FDataRow> dataList = new ArrayList();
 
@@ -38,10 +39,9 @@ public class PreloadDatabaseAdapter  extends AbstractDataSetAdapter<List<FData>>
     
     @Override
     public void reload(DataGenContext context) throws Exception {
-        cacheInterface = MemoryCache.getCache(context.getId());
+        cacheInterface = MemoryCache.getCache(context.getId(dataSet));
         dataList = cacheInterface.getAll();
-        
-        m_logger.info("PreloadDatabaseAdapter.reload() from MEMORY " + context.getId() + ",count=" + dataList.size());
+        m_logger.info("PreloadDatabaseAdapter.reload() from MEMORY " + context.getId(null) + ",count=" + dataList.size());
     }
 
     @Override
@@ -61,6 +61,13 @@ public class PreloadDatabaseAdapter  extends AbstractDataSetAdapter<List<FData>>
         
         for (int i = 0; i < fieldNames.length; i++) {
             FData data = row.getByName(fieldNames[i]);
+            
+            //TODO if fData is set to "excludeInOutput" from previous workflow
+            // What should I do here. For now, don't exclude them
+//            if (data.excludeInOutput()){
+//                cotninue;
+//            }
+            
             if (data != null) {
                 ret.add(data);
             } else {
@@ -85,5 +92,14 @@ public class PreloadDatabaseAdapter  extends AbstractDataSetAdapter<List<FData>>
         
         return fieldNameList.split(",", -1);
     }
+
+    public String getDataSet() {
+        return dataSet;
+    }
+
+    public void setDataSet(String dataSet) {
+        this.dataSet = dataSet;
+    }
+
 
 }

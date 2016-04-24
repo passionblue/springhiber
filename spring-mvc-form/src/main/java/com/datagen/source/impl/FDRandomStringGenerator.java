@@ -30,7 +30,7 @@ public class FDRandomStringGenerator extends AbstractDataSource {
     private boolean lettersOnly = false;
     
     @Override
-    public FData generateNext() {
+    public FData nextFData() {
 
 //        String raw = RandomStringUtils.random(Integer.parseInt((String)configurator.getConfig(FDCONFIG_RANDOM_STRING_MAX_LENGTH, "10")));
         
@@ -57,12 +57,12 @@ public class FDRandomStringGenerator extends AbstractDataSource {
 //        return new FDataString(ofNullable(prefixString).orElse("") + data + ofNullable(appendingString).orElse(""));
 
         data = applyCommonFormatter(data);
-        return new FDataString(fieldName,data);
+        return new FDataString(fieldName, excludeInOutput, data);
     }
     
     @Override
-    public FData generateNext(Object arg) {
-        return generateNext();
+    public FData nextFData(Object arg) {
+        return nextFData();
     }
 
 

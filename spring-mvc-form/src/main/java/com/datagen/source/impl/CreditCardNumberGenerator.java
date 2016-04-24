@@ -10,7 +10,7 @@ public class CreditCardNumberGenerator extends AbstractDataSource {
     private int cardNumberLength = 16;
 
     @Override
-    public FData generateNext() {
+    public FData nextFData() {
         
         
         String cardNumber = RandomStringUtils.random(cardNumberLength - 1, false, true);
@@ -18,13 +18,13 @@ public class CreditCardNumberGenerator extends AbstractDataSource {
         long cardNumberLong = Long.parseLong(cardNumber);
         int cd = generateCheckDigit(cardNumberLong);
         
-        return new FDataString(getFieldName(), String.valueOf(cardNumberLong) + String.valueOf(cd));
+        return new FDataString(getFieldName(), excludeInOutput, String.valueOf(cardNumberLong) + String.valueOf(cd));
 
     }
 
     @Override
-    public FData generateNext(Object arg) {
-        return generateNext();
+    public FData nextFData(Object arg) {
+        return nextFData();
     }
 
     private static int generateCheckDigit(long l) {

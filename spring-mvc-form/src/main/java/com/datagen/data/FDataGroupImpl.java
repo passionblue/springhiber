@@ -7,23 +7,32 @@ import com.datagen.FData;
 import com.datagen.FDataGroup;
 
 /*
- * Generally used by Mixer
+ * Group implementation
+ * 
+ * @see FDataStickyGroupImpl, FDataGroup
  */
 
 public class FDataGroupImpl extends AbstractFData<List<FData>> implements FDataGroup {
     
     private List<FData> dataList;
     
-    public FDataGroupImpl(String fieldName, String [] data) {
-        this.fieldName = fieldName;
+    public FDataGroupImpl(String fieldName, boolean excludeInOutput, String [] data) {
+        super(fieldName, excludeInOutput);
         dataList = new ArrayList();
         for (int i = 0; i < data.length; i++) {
-            dataList.add(new FDataString(fieldName, data[i]));
+            dataList.add(new FDataString(fieldName, excludeInOutput, data[i]));
         }
     }
     
-    public FDataGroupImpl(String fieldName, List<FData> data) {
-        this.fieldName = fieldName;
+    public FDataGroupImpl(String fieldName, boolean excludeInOutput, List<FData> data) {
+        super(fieldName, excludeInOutput);
+        
+        for (FData fData : data) {
+            if ( fData instanceof AbstractFData){
+                ((AbstractFData)fData).setExcludeInOutput(excludeInOutput);
+            }
+        }
+        
         dataList = new ArrayList(data);
     }    
     

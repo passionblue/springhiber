@@ -1,30 +1,20 @@
 package com.datagen.data;
 
-import com.datagen.FData;
+public class FDataNull extends AbstractFData<Object>  {
 
-public class FDataNull implements FData<Object> {
+    public FDataNull(String fieldName) {
+        super(fieldName, false);
+        this.fieldName = fieldName;
+    }
 
-    private String fieldName;
-    
-    @Override
-    public String getFieldName() {
-        return fieldName;
+    public FDataNull(String fieldName, boolean excludeInOutput) {
+        super(fieldName, excludeInOutput);
+        this.fieldName = fieldName;
     }
 
     @Override
     public Object getRawFormat() {
-        return "";
+        return null;
     }
 
-    @Override
-    public String toString() {
-        return "FDataNull []";
-    }
-
-    public void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
-    }
-
-    
-    
 }

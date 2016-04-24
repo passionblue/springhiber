@@ -36,7 +36,7 @@ public class CSVFileOutputChannel extends  AbstractOutputChannel<String> {
             writer.println(dataRow);
             writer.flush();
             dataCount++;
-            m_logger.debug("Data entered = " + dataRow);
+            m_logger.debug("Data entered [{}]", dataRow);
         } else {
             m_logger.warn("Writer not initiated or failed during init [{}] file={}", id, fileName);
         }

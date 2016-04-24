@@ -35,7 +35,7 @@ public class SimpleOutputChannelFactory implements OutputChannelFactory{
         
         for (HierarchicalConfiguration sub : fieldsConfigurations) {
         
-            OutputChannel channel = createChannel(runContext, sub);
+            OutputChannel channel = createChannel(runContext, sub, null);
             channels.add(channel);
         }
         
@@ -47,18 +47,22 @@ public class SimpleOutputChannelFactory implements OutputChannelFactory{
         
         List<OutputChannel> channels = new ArrayList();
         
-        XMLConfiguration config = runContext.getXmlConfig();
+        XMLConfiguration preLoadConfig = runContext.getXmlConfig();
         
-        XMLConfiguration preLoadConfig;
+//        XMLConfiguration preLoadConfig;
         try {
-            String importGenerate = config.getString("ImportGenerate");        
-            preLoadConfig = ConfigUtils.loadConfiguration(importGenerate);
-        
+            
+//            preLoadConfig = ConfigUtils.loadConfiguration(file);
+            String dataSetName = preLoadConfig.getString("DataSetName");
+            m_logger.info("Loading Channels for [{}] from [{}]", dataSetName, runContext.getFileName());
+            
+//            String importGenerate = config.getString("ImportGenerate");        
+            
             List<HierarchicalConfiguration<ImmutableNode>> fieldsConfigurations = preLoadConfig.configurationsAt("Outputs.Output");
             
             for (HierarchicalConfiguration sub : fieldsConfigurations) {
             
-                OutputChannel channel = createChannel(runContext, sub);
+                OutputChannel channel = createChannel(runContext, sub, dataSetName);
                 channels.add(channel);
             }
 
@@ -72,7 +76,7 @@ public class SimpleOutputChannelFactory implements OutputChannelFactory{
     }
     
 
-    private OutputChannel createChannel(DataGenContext runContext, HierarchicalConfiguration config){
+    private OutputChannel createChannel(DataGenContext runContext, HierarchicalConfiguration config, String dataSet){
         String type = config.getString("Type", null);
         int maxCount = config.getInt("MaxCount", 0);
         
@@ -82,7 +86,7 @@ public class SimpleOutputChannelFactory implements OutputChannelFactory{
             String delimiter = config.getString("Delimiter");
             boolean includeHeader = config.getBoolean("IncludeHeader");
             
-            CSVFileOutputChannel channel = new CSVFileOutputChannel(runContext.getId(), maxCount, fileName, includeHeader);
+            CSVFileOutputChannel channel = new CSVFileOutputChannel(runContext.getId(dataSet), maxCount, fileName, includeHeader);
             FormatRowToDelimiteredString f = new FormatRowToDelimiteredString(delimiter);
             channel.setRowFormatter(f);
             FormatRowHeaderToDelimiteredString header = new FormatRowHeaderToDelimiteredString(delimiter);
@@ -95,13 +99,13 @@ public class SimpleOutputChannelFactory implements OutputChannelFactory{
             
         } else if ("MEMORY".equalsIgnoreCase(type)) {
             List<OutputChannel> channels = new ArrayList();
-            MemoryCache cache = MemoryCache.getCache(runContext.getId());
-            MemoryOutputChannel channel = new MemoryOutputChannel(runContext.getId(), cache);
+            MemoryCache cache = MemoryCache.getCache(runContext.getId(dataSet));
+            MemoryOutputChannel channel = new MemoryOutputChannel(runContext.getId(dataSet), cache);
             channel.setRowFormatter(new FormatRowToRow(null));
             channel.setMaxCount(maxCount);
             return channel;
         } else{
-            ConsoleOutputChannel channel = new ConsoleOutputChannel(runContext.getId());
+            ConsoleOutputChannel channel = new ConsoleOutputChannel(runContext.getId(dataSet));
             FormatRowToDelimiteredString f = new FormatRowToDelimiteredString();
             channel.setRowFormatter(f);
             return channel;

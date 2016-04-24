@@ -5,19 +5,29 @@ import static java.util.Optional.ofNullable;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.datagen.DataGenContext;
+import com.datagen.FData;
 import com.datagen.FDataSource;
+import com.datagen.data.FDataNull;
+import com.datagen.data.FDataString;
+import com.datagen.fault.FaultGenerater;
 import com.datagen.source.FDataSourceAdapter;
 import com.datagen.source.adapter.SourceFieldDataFormatter;
 
 abstract public class AbstractDataSource implements FDataSource {
 
+    private static Logger m_logger = LoggerFactory.getLogger(AbstractDataSource.class);
+    
     protected String runId;
     protected String fieldName;
     protected String prefixString;
     protected String appendingString;
     protected String mask;
+    protected FaultGenerater faultGenerater;
+    protected boolean excludeInOutput;
     
     protected List<SourceFieldDataFormatter> formatters;
     protected FDataSourceAdapter<?> dataAdapter;
@@ -50,10 +60,40 @@ abstract public class AbstractDataSource implements FDataSource {
         return b.toString();
     }
     
+    
+    
+    
+    @Override
+    public FData generateNext() {
+       
+        if ( faultGenerater != null && faultGenerater.faultRaise()) { 
+            Object fault = faultGenerater.getFaultData();
+            
+            if ( fault == null || StringUtils.isBlank(fault.toString())){
+                return new FDataNull(this.fieldName, excludeInOutput);
+            } else {
+                return new FDataString(fieldName, excludeInOutput, fault.toString());
+            }
+        }
+        
+        return nextFData();
+    }
+
+    @Override
+    public FData generateNext(Object arg) {
+        
+        return  nextFData(arg);
+    }
+
+    abstract FData nextFData();
+    abstract FData nextFData(Object arg);    
+    
+    
     @Override
     public void reload(DataGenContext context) throws Exception{
         if ( dataAdapter != null)
             dataAdapter.reload(context);
+        m_logger.info("DataSource data loaded [{}]", fieldName);
     }
 
     public String getFieldName() {
@@ -111,6 +151,23 @@ abstract public class AbstractDataSource implements FDataSource {
     public void setRunId(String runId) {
         this.runId = runId;
     }
-    
+
+    public FaultGenerater getFaultGenerater() {
+        return faultGenerater;
+    }
+
+    public void setFaultGenerater(FaultGenerater faultGenerater) {
+        this.faultGenerater = faultGenerater;
+    }
+
+    public boolean excludeInOutput() {
+        return excludeInOutput;
+    }
+
+    public void setExcludeInOutput(boolean excludeInOutput) {
+        this.excludeInOutput = excludeInOutput;
+    }
+
+
     
 }

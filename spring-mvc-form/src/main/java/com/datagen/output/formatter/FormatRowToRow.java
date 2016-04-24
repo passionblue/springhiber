@@ -21,7 +21,7 @@ public class FormatRowToRow implements OutputRowChannelFormatter<FDataRow>{
     public FormatRowToRow(String fieldNames) {
         
         if ( !StringUtils.isBlank(fieldNames)) {
-            String[] fields = fieldNames.split(",");
+            String[] fields = fieldNames.split(",", -1);
             passingFields.addAll(Arrays.asList(fields));
         }
     }

@@ -31,7 +31,7 @@ public class AutositeDataGenerator {
     /*
      * Application Configs
      */
-    private int numDataToGenerate = 100;
+    private int numDataToGenerate = 5;
     
     public void init() {
         
@@ -45,6 +45,9 @@ public class AutositeDataGenerator {
         
         DataGenContext runContext = DataGenContext.getNewToken(fileName);
         
+        m_logger.debug("##################################################################################");
+        m_logger.debug("Run Context Created " + runContext);
+        m_logger.debug("##################################################################################");
         
         /*
          * Check file first. And validate the basic fields. register to the system. 
@@ -55,9 +58,13 @@ public class AutositeDataGenerator {
          *  get all sources
          */
 
-        List<FDataSource> fDataPreLoadSources = sourceAssembler.getPreLoadSources(runContext);
-        List<OutputChannel> preLoadChannels = outputChannelFactory.getPreLoadChannels(runContext);
-        runDataForSources(runContext, fDataPreLoadSources, preLoadChannels);
+        List<DataGenContext> preLoadConfigs = sourceAssembler.getPreLoadConfigs(runContext);
+        
+        for (DataGenContext pContext : preLoadConfigs) {
+            List<FDataSource> fDataPreLoadSources = sourceAssembler.getPreLoadSources(pContext);
+            List<OutputChannel> preLoadChannels = outputChannelFactory.getPreLoadChannels(pContext);
+            runDataForSources(pContext, fDataPreLoadSources, preLoadChannels);
+        }
         
         List<FDataSource> fDataSources = sourceAssembler.getSources(runContext);
         List<OutputChannel> channels = outputChannelFactory.getChannels(runContext);
@@ -92,22 +99,22 @@ public class AutositeDataGenerator {
             ds.reload(runContext);
         }
         
-        for (int i = 0; i < this.numDataToGenerate; i++) {
-        
-            List<FData> preDataList = new ArrayList<FData>();
+        for (int i = 0; i < runContext.getDataCount() ; i++) {
             
             FDataRow dataRow = new FDataRowImpl();
             
             for (FDataSource fDataSource : fDataSources) {
-                
+
+//                m_logger.debug("Data Generating for field [{}:{}] Source={}, Exclude={}", fDataSource.getFieldName(), i, fDataSource.getClass().getSimpleName(), fDataSource.excludeInOutput() );
+
                 FData fData = fDataSource.generateNext();
-                
                 if ( fData instanceof FDataGroup ) {
-                    preDataList.addAll(((FDataGroup)fData).getRawFormat());
-                    dataRow.addData(((FDataGroup)fData).getRawFormat());
+                    FDataGroup dg = (FDataGroup) fData;
+                    dataRow.addData(dg.getRawFormat());
+                    m_logger.debug("--(G)-> field={}, Source={}, dataClass={}, size={}, underlying={}, exclude={}, Sexclude={}", dg.getFieldName(), fDataSource.getClass().getSimpleName(), fData.getClass().getSimpleName(), dg.getRawFormat().size(), dg.getUnderlyingData().size(), dg.excludeInOutput(), fDataSource.excludeInOutput());
                 } else {
-                    preDataList.add(fData);
                     dataRow.addData(fData);
+                    m_logger.debug("--(F)-> field={}, Source={}, dataClass={}, exclude={}, Sexclude={}", fData.getFieldName(), fDataSource.getClass().getSimpleName(), fData.getClass().getSimpleName(), fData.excludeInOutput(), fDataSource.excludeInOutput());
                 }
             }
             
@@ -117,7 +124,7 @@ public class AutositeDataGenerator {
             
             FDataRow formattedRow = new FDataRowImpl();
             
-            for (FData fData : dataRow.getData()) {
+            for (FData fData : dataRow.getData(false)) {
                 FData result = transformerFactory.getTransformer(fData).transform(fData);
                 if ( result instanceof FDataGroup ) {
                     formattedRow.addData(((FDataGroup)result).getRawFormat());
@@ -125,6 +132,19 @@ public class AutositeDataGenerator {
                     formattedRow.addData(result);
                 }
             }
+            
+            /*
+             * Exclude output from excluded incidator
+             */
+
+//            FDataRow finalRow = new FDataRowImpl();
+//            
+//            for (FData fData : formattedRow.getData()) {
+//                if (fData.excludeInOutput())
+//                    continue;
+//                finalRow.addData(fData);
+//            }
+            
             
             /*
              *  transform data for delivery format
@@ -180,10 +200,20 @@ public class AutositeDataGenerator {
     public static void main(String[] args) throws Exception {
         
         ApplicationContext c = new ClassPathXmlApplicationContext("applicationContext-datagen.xml");
-        
         AutositeDataGenerator gen = (AutositeDataGenerator) c.getBean("dataGenerator");
-        
+
+        long start = System.currentTimeMillis();
         gen.generate("configuration-main.xml");
+        long end = System.currentTimeMillis();
+        
+        System.out.println("Time Taken " + (end-start));
+        
+        System.gc();
+
+        for (int i = 0; i < 10000; i++) {
+            Thread.sleep(1000);
+            System.gc();
+        }
         
     }
     

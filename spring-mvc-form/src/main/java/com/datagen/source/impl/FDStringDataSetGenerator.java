@@ -19,7 +19,7 @@ public class FDStringDataSetGenerator extends AbstractDataSource {
     private FDataSourceAdapter<String> dataLoadHolder;
     
     @Override
-    public FData generateNext() {
+    public FData nextFData() {
 
         int nextPos = RandomUtils.nextInt(0,  dataLoadHolder.getDataSize());
     
@@ -27,15 +27,15 @@ public class FDStringDataSetGenerator extends AbstractDataSource {
         
         
         String raw = dataLoadHolder.getByPosition(nextPos);
-        return new FDataString(fieldName, raw);
+        return new FDataString(fieldName, excludeInOutput, raw);
     }
 
     //TODO to support non-random generation
     
     @Override
-    public FData generateNext(Object arg) {
+    public FData nextFData(Object arg) {
         
-            return generateNext();
+            return nextFData();
     }
     
 }

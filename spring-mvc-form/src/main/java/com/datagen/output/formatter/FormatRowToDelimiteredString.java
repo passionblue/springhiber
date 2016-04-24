@@ -19,6 +19,7 @@ public class FormatRowToDelimiteredString implements OutputRowChannelFormatter<S
     //Default Constructor
     public FormatRowToDelimiteredString() {
     }
+    
     //Default Constructor
     public FormatRowToDelimiteredString(String delimiter) {
         this.delimiter = delimiter;
@@ -27,11 +28,15 @@ public class FormatRowToDelimiteredString implements OutputRowChannelFormatter<S
     @Override
     public String format(FDataRow row) {
         
-        List<FData> fields = row.getData();
+        List<FData> fields = row.getData(true);
 
         StringBuilder builder = new StringBuilder();
 
         for (FData fData : fields) {
+
+            if ( fData.excludeInOutput() ) 
+                continue;
+            
             if ( fData instanceof FDataGroup ) {
                 FDataGroup group = (FDataGroup) fData;
                 List<FData> dataFields = group.getUnderlyingData();
@@ -39,7 +44,7 @@ public class FormatRowToDelimiteredString implements OutputRowChannelFormatter<S
                     builder.append(fd.getRawFormat().toString()).append(delimiter);
                 }
             } else {
-                builder.append(fData.getRawFormat().toString()).append(delimiter);
+                builder.append(fData.getRawFormat() == null?"":fData.getRawFormat().toString()).append(delimiter);
             }
         }
         

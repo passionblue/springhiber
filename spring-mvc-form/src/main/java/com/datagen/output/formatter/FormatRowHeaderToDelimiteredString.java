@@ -29,11 +29,15 @@ public class FormatRowHeaderToDelimiteredString implements OutputRowChannelForma
     @Override
     public String format(FDataRow row) {
         
-        List<FData> fields = row.getData();
+        List<FData> fields = row.getData(true);
 
         StringBuilder builder = new StringBuilder();
 
         for (FData fData : fields) {
+            
+            if ( fData.excludeInOutput() ) 
+                continue;
+            
             if ( fData instanceof FDataGroup ) {
                 FDataGroup group = (FDataGroup) fData;
                 List<FData> dataFields = group.getUnderlyingData();

@@ -35,8 +35,6 @@ public class FDataRegexUtil {
         return randomStr;
     }    
     
-    
-    
     public static void compileCustomFDataPattern(String pattern) {
 
         

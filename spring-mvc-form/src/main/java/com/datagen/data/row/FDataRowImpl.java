@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.datagen.FData;
 import com.datagen.FDataRow;
+import com.datagen.data.AbstractFData;
 
 public class FDataRowImpl extends CopyOnWriteArrayList<FData> implements FDataRow {
 
@@ -19,7 +20,16 @@ public class FDataRowImpl extends CopyOnWriteArrayList<FData> implements FDataRo
     }
 
     @Override
-    public List<FData> getData() {
+    public List<FData> getData(boolean excludeExcluded) {
+        
+        if (excludeExcluded) {
+            List<FData> retArray = new ArrayList();
+            for (FData fData : this) {
+                if (!fData.excludeInOutput())
+                    retArray.add(fData);
+            }
+            return retArray;
+        }
         return new ArrayList(this);
     }
 
@@ -41,11 +51,22 @@ public class FDataRowImpl extends CopyOnWriteArrayList<FData> implements FDataRo
     @Override
     public void addData(FData fData) {
         nameMap.put(fData.getFieldName(), fData);
+
+        if (fData instanceof AbstractFData ) {
+            ((AbstractFData) fData).setDataRow(this);
+        }
         this.add(fData);
     }
 
     @Override
     public void addData(List<FData> fDatas) {
+        
+        for (FData fData : fDatas) {
+            if (fData instanceof AbstractFData ) {
+                ((AbstractFData) fData).setDataRow(this);
+            }
+        }
+        
         this.addAll(fDatas);
     }
 

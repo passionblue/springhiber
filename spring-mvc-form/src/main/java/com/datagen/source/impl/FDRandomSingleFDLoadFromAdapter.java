@@ -6,7 +6,7 @@ import org.apache.commons.lang3.RandomUtils;
 
 import com.datagen.FData;
 import com.datagen.configuration.FDConfigurator;
-import com.datagen.data.FDataGroupAsSingleImpl;
+import com.datagen.data.FDataStickyGroupImpl;
 import com.datagen.data.FDataGroupImpl;
 import com.datagen.data.FDataNull;
 import com.datagen.data.FDataString;
@@ -25,13 +25,13 @@ public class FDRandomSingleFDLoadFromAdapter extends AbstractDataSource {
     private int[]          selectedColumns;
     
     @Override
-    public FData generateNext() {
+    public FData nextFData() {
         
         int max = dataAdapter.getDataSize();
         Object data = dataAdapter.getByPosition(RandomUtils.nextInt(0, max));
         
         if ( data instanceof String) 
-            return new FDataString(fieldName,data);
+            return new FDataString(fieldName, excludeInOutput, data);
 
         else if ( data instanceof String[] ) {
             /*
@@ -42,13 +42,13 @@ public class FDRandomSingleFDLoadFromAdapter extends AbstractDataSource {
             if ( selectedColumns != null && selectedColumns.length > 0 ) {
                 
                 if ( selectedColumns.length == 1) 
-                    return new FDataString(fieldName, array[selectedColumns[0]]);
+                    return new FDataString(fieldName, excludeInOutput, array[selectedColumns[0]]);
                 else {
                     String [] selectedData = DataCopyUtil.copyStringArrayByIndex(array, selectedColumns);;
-                    return new FDataGroupAsSingleImpl(fieldName,selectedData);
+                    return new FDataStickyGroupImpl(fieldName,excludeInOutput, selectedData);
                 }
             } else {
-                return new FDataGroupAsSingleImpl(fieldName,array);
+                return new FDataStickyGroupImpl(fieldName,excludeInOutput, array);
             }            
         } else if ( data instanceof FData ) {
 
@@ -57,15 +57,15 @@ public class FDRandomSingleFDLoadFromAdapter extends AbstractDataSource {
             
         } else if ( data instanceof List ) {
             
-            return new FDataGroupImpl( fieldName, (List<FData>) data);
+            return new FDataGroupImpl( fieldName, excludeInOutput, (List<FData>) data);
         }
         
-        return new FDataNull();
+        return new FDataNull(fieldName);
     }
     
     @Override
-    public FData generateNext(Object arg) {
-        return generateNext();
+    public FData nextFData(Object arg) {
+        return nextFData();
     }
 
 

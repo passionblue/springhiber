@@ -5,7 +5,7 @@ import java.util.List;
 public interface FDataRow {
     int             count();
     
-    List<FData>     getData();
+    List<FData>     getData(boolean excludeExcluded);
     boolean         isOrdered();
     
     FData           getByName(String name);

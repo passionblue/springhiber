@@ -1,13 +1,11 @@
 package com.datagen.source.assembler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.tree.ImmutableNode;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +15,6 @@ import com.datagen.FDataSourceAssembler;
 import com.datagen.meta.FieldMetaData;
 import com.datagen.meta.FieldMetaDataManager;
 import com.datagen.source.impl.FDSourceFactoryByXMLConfiguration;
-import com.datagen.util.ConfigUtils;
 
 public class FDSourceAggregatorByXMLConfigImpl implements FDataSourceAssembler {
 

@@ -53,7 +53,7 @@ public class FDRandomMultipleFDLoadFromAdapter extends AbstractDataSource {
             
         }
         
-        return new FDataNull(fieldName);
+        return new FDataNull(fieldName, excludeInOutput);
     }
     
     @Override

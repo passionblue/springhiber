@@ -18,6 +18,7 @@ abstract public class AbstractOutputChannel<T> implements OutputChannel {
     protected int maxCount = 0;
     protected boolean includeHeader;
     protected boolean headerAdded;
+    protected boolean failOnEntryError;
     
     //Default Constructor
     public AbstractOutputChannel(String id, int maxCount) {
@@ -45,7 +46,14 @@ abstract public class AbstractOutputChannel<T> implements OutputChannel {
             return;
         }
         
-        writeToChannel(rowFormatter.format(dataRow));
+        try {
+            writeToChannel(rowFormatter.format(dataRow));
+        }
+        catch (Exception e) {
+            m_logger.error("",e);
+            if (failOnEntryError)
+                throw e;
+        }
         m_logger.debug("Completed writing to output channel [" + id + "] " + getClass().getSimpleName());
     }
 
@@ -112,6 +120,14 @@ abstract public class AbstractOutputChannel<T> implements OutputChannel {
 
     public void setHeaderAdded(boolean headerAdded) {
         this.headerAdded = headerAdded;
+    }
+
+    public boolean isFailOnEntryError() {
+        return failOnEntryError;
+    }
+
+    public void setFailOnEntryError(boolean failOnEntryError) {
+        this.failOnEntryError = failOnEntryError;
     }
 
     

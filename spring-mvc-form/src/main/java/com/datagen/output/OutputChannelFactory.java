@@ -6,6 +6,6 @@ import com.datagen.DataGenContext;
 
 public interface OutputChannelFactory {
 
-    List<OutputChannel> getPreLoadChannels(DataGenContext runContext);
-    List<OutputChannel> getChannels(DataGenContext runContext);
+    List<OutputChannel> getPreLoadChannels(DataGenContext runContext)  throws Exception ;
+    List<OutputChannel> getChannels(DataGenContext runContext)  throws Exception ;
 }

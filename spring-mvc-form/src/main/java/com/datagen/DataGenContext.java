@@ -40,10 +40,10 @@ public class DataGenContext {
     public DataGenContext() {
     }
 
-//    public String getId() {
-//        return id;
-//    }
-
+    public String getBaseId() {
+        return id;
+    }
+    
     public String getId(String dataSet) {
         return id + (dataSet==null? "":"/" + dataSet);
     }

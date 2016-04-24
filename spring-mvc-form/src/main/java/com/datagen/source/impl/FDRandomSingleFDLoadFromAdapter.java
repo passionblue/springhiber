@@ -60,7 +60,7 @@ public class FDRandomSingleFDLoadFromAdapter extends AbstractDataSource {
             return new FDataGroupImpl( fieldName, excludeInOutput, (List<FData>) data);
         }
         
-        return new FDataNull(fieldName);
+        return new FDataNull(fieldName, excludeInOutput);
     }
     
     @Override

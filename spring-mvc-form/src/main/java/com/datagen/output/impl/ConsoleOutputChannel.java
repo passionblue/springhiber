@@ -16,7 +16,7 @@ public class ConsoleOutputChannel extends  AbstractOutputChannel<String> {
 
     @Override
     public void writeToChannel(String dataRow) throws Exception {
-//        System.out.println("##[" + id + "] " + dataRow);
+        System.out.println("---------------## [" + id + "] " + dataRow);
     }
 
     @Override

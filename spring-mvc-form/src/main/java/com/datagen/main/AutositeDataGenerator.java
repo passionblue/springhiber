@@ -203,17 +203,17 @@ public class AutositeDataGenerator {
         AutositeDataGenerator gen = (AutositeDataGenerator) c.getBean("dataGenerator");
 
         long start = System.currentTimeMillis();
-        gen.generate("configuration-main.xml");
+        gen.generate("datagen/configuration-main.xml");
         long end = System.currentTimeMillis();
         
         System.out.println("Time Taken " + (end-start));
         
-        System.gc();
-
-        for (int i = 0; i < 10000; i++) {
-            Thread.sleep(1000);
-            System.gc();
-        }
+//        System.gc();
+//
+//        for (int i = 0; i < 10000; i++) {
+//            Thread.sleep(1000);
+//            System.gc();
+//        }
         
     }
     

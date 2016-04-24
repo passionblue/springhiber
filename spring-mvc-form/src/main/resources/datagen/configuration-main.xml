@@ -2,11 +2,11 @@
 	<Version>1.0</Version>
 	<Timestamp>20160416-14:23:34</Timestamp> <!--  Creation Timestamp -->
 	<DataSetName>Main</DataSetName>
-	<ImportGenerate>configuration-pre.xml</ImportGenerate> <!--  -->
-	<ImportGenerate>configuration-pre2.xml</ImportGenerate> <!--  -->
-	<ImportGenerate>configuration-pre3.xml</ImportGenerate> <!--  -->
+	<ImportGenerate>datagen/configuration-pre.xml</ImportGenerate> <!--  -->
+	<ImportGenerate>datagen/configuration-pre2.xml</ImportGenerate> <!--  -->
+	<ImportGenerate>datagen/configuration-pre3.xml</ImportGenerate> <!--  -->
 	<Name>Test</Name>
-	<Count>300000</Count>
+	<Count>1000</Count>
 	<Fields>
 		<Field>
 			<Name>id</Name>
@@ -16,8 +16,8 @@
 			<DataSource>
 				<Class>com.datagen.source.impl.FDRandomStringGenerator</Class>
 				 <Property>
-					<prefixString>-</prefixString>				 
-					<appendingString>-</appendingString>				 
+					<prefixString>A</prefixString>				 
+					<appendingString>Z</appendingString>				 
 					<defaultLength>10</defaultLength>
 					<fixedLength>false</fixedLength> <!-- default is true -->
 					<numbersOnly>false</numbersOnly>								
@@ -26,12 +26,34 @@
 				<Fault>
 					<Class>com.datagen.fault.SimpleFaultStringGenerator</Class>
 	 				<Property>
-						<faultRatioByPercent>99</faultRatioByPercent> <!-- percent should be < 100 -->
+						<faultRatioByPercent>20</faultRatioByPercent> <!-- percent should be < 100 -->
 						<faultString></faultString>
 	 				</Property>
 				</Fault>	
 			</DataSource>
 		</Field>
+		<Field>
+			<Name>year</Name>
+			<Display>Year</Display>
+			<DataType>String</DataType> 
+			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomNumberGenerator</Class>
+				 <Property>
+					<rangeStart>2000</rangeStart>												
+					<rangeEnd>2030</rangeEnd>												
+					<numberClass>java.lang.Integer</numberClass>												
+				 </Property>
+				<Fault>
+					<Class>com.datagen.fault.SimpleFaultStringGenerator</Class>
+	 				<Property>
+						<faultRatioByPercent>10</faultRatioByPercent> <!-- percent should be < 100 -->
+						<faultString>-1</faultString>
+	 				</Property>
+				</Fault>	
+			</DataSource>
+		</Field>
+
 		
 		<Field>
 			<Name>nickname</Name>
@@ -177,16 +199,49 @@
 
 	</Fields>
 	<Outputs>
+
 		<Output>
-			<MaxCount>30</MaxCount> <!-- -1, unlimited, 0 is random -->
+			<MaxCount>1000</MaxCount> 
+			<Type>Console</Type>
+			<Delimiter>,</Delimiter>
+			<Header>FALSE</Header>
+		</Output>		
+	
+		<Output>
+			<Type>DATABASE</Type>
+			<Table>datagen_output</Table>
+			<ConfigFile>datagen/adapter/db/spring-config-hsql.xml</ConfigFile>
+			<FailOnEntryError>true</FailOnEntryError> <!--  stop when error to enter a entry -->
+			<DBFieldMap>
+				<DBField>
+					<Name>first_name</Name>
+					<Map>first_name2</Map>
+					<DataTypeClass>java.lang.String</DataTypeClass>
+				</DBField>
+				<DBField>
+					<Name>last_name</Name>
+					<Map>last_name2</Map>
+					<DataTypeClass>java.lang.String</DataTypeClass>
+				</DBField>			
+				<DBField>
+					<Name>year</Name>
+					<Map>year</Map>
+					<DataTypeClass>java.lang.Integer</DataTypeClass>
+				</DBField>			
+			</DBFieldMap>			
+		</Output>
+		
+<!-- 		
+
+		<Output>
+			<MaxCount>30</MaxCount>
 			<Type>CSV</Type>
 			<Delimiter>,</Delimiter>
 			<IncludeHeader>TRUE</IncludeHeader>
 			<Filename>output.csv</Filename>
-			
 		</Output>
-		
-<!-- 		
+
+
 		<Output>
 			<MaxCount>1000</MaxCount> 
 			<Type>Console</Type>
@@ -199,13 +254,8 @@
 			<Table>DATABASE</Table>
 		</Output>
 		<Output>
-			<Type>DATABASE</Type>
-			<Table>DATABASE</Table>
-		</Output>
-		<Output>
 			<Type>JMS</Type>
 		</Output>
- -->
 
 		<Output>
 			<Type>CUSTOM</Type>
@@ -213,6 +263,7 @@
 			<Formatter></Formatter>
 		</Output>
 
+ -->
  		
 	</Outputs>
 

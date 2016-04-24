@@ -1,7 +1,9 @@
 package com.datagen.output.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
@@ -16,7 +18,7 @@ import com.datagen.output.OutputChannelFactory;
 import com.datagen.output.formatter.FormatRowHeaderToDelimiteredString;
 import com.datagen.output.formatter.FormatRowToDelimiteredString;
 import com.datagen.output.formatter.FormatRowToRow;
-import com.datagen.util.ConfigUtils;
+import com.datagen.output.impl.DatabaseOutputChannel.FieldMeta;
 
 public class SimpleOutputChannelFactory implements OutputChannelFactory{
 
@@ -27,7 +29,7 @@ public class SimpleOutputChannelFactory implements OutputChannelFactory{
     }
     
     @Override
-    public List<OutputChannel> getChannels(DataGenContext runContext) {
+    public List<OutputChannel> getChannels(DataGenContext runContext) throws Exception {
 
         List<OutputChannel> channels = new ArrayList();
         
@@ -43,20 +45,15 @@ public class SimpleOutputChannelFactory implements OutputChannelFactory{
     }
 
     @Override
-    public List<OutputChannel> getPreLoadChannels(DataGenContext runContext) {
+    public List<OutputChannel> getPreLoadChannels(DataGenContext runContext)  throws Exception {
         
         List<OutputChannel> channels = new ArrayList();
         
         XMLConfiguration preLoadConfig = runContext.getXmlConfig();
-        
-//        XMLConfiguration preLoadConfig;
         try {
             
-//            preLoadConfig = ConfigUtils.loadConfiguration(file);
             String dataSetName = preLoadConfig.getString("DataSetName");
             m_logger.info("Loading Channels for [{}] from [{}]", dataSetName, runContext.getFileName());
-            
-//            String importGenerate = config.getString("ImportGenerate");        
             
             List<HierarchicalConfiguration<ImmutableNode>> fieldsConfigurations = preLoadConfig.configurationsAt("Outputs.Output");
             
@@ -76,36 +73,69 @@ public class SimpleOutputChannelFactory implements OutputChannelFactory{
     }
     
 
-    private OutputChannel createChannel(DataGenContext runContext, HierarchicalConfiguration config, String dataSet){
-        String type = config.getString("Type", null);
-        int maxCount = config.getInt("MaxCount", 0);
+    private OutputChannel createChannel(DataGenContext runContext, HierarchicalConfiguration config, String dataSetName) throws Exception {
         
-        if ("CSV".equalsIgnoreCase(type)) {
+        
+        String outputChannelType = config.getString("Type", null);
+        int maxCount = config.getInt("MaxCount", 0);
+        boolean failOnError         = config.getBoolean("FailOnEntryError", false);
+        
+        if ("CSV".equalsIgnoreCase(outputChannelType)) {
             
-            String fileName = config.getString("FileName");
-            String delimiter = config.getString("Delimiter");
-            boolean includeHeader = config.getBoolean("IncludeHeader");
+            String fileName         = config.getString("FileName");
+            String delimiter        = config.getString("Delimiter");
+            boolean includeHeader   = config.getBoolean("IncludeHeader");
             
-            CSVFileOutputChannel channel = new CSVFileOutputChannel(runContext.getId(dataSet), maxCount, fileName, includeHeader);
+            CSVFileOutputChannel channel = new CSVFileOutputChannel(runContext.getId(dataSetName), maxCount, fileName, includeHeader);
             FormatRowToDelimiteredString f = new FormatRowToDelimiteredString(delimiter);
             channel.setRowFormatter(f);
             FormatRowHeaderToDelimiteredString header = new FormatRowHeaderToDelimiteredString(delimiter);
             channel.setHeaderFormatter(header);
+            channel.setFailOnEntryError(failOnError);
             return channel;
             
-        } else if ("DATABASE".equalsIgnoreCase(type)) {
+        } else if ("DATABASE".equalsIgnoreCase(outputChannelType)) {
             
-            return null;
             
-        } else if ("MEMORY".equalsIgnoreCase(type)) {
+            String tableName         = config.getString("table");
+            String configFileName    = config.getString("ConfigFile");
+            
+            List<HierarchicalConfiguration<ImmutableNode>> fieldsConfigurations = config.configurationsAt("DBFieldMap.DBField");
+            
+            Map<String, FieldMeta> fieldMetaMap = new HashMap();
+            
+            for (HierarchicalConfiguration sub : fieldsConfigurations) {
+
+                String name = sub.getString("Name");
+                String map = sub.getString("Map");                
+                String dataTypeClass = sub.getString("DataTypeClass");
+
+                DatabaseOutputChannel.FieldMeta fieldMap = new DatabaseOutputChannel.FieldMeta(name, map, Class.forName(dataTypeClass));
+            
+                fieldMetaMap.put(map, fieldMap);
+                
+            }            
+            
+            DatabaseOutputChannel channel = new DatabaseOutputChannel(runContext.getId(dataSetName));
+            
+            channel.setTableName(tableName);
+            channel.setFieldMetaMap(fieldMetaMap);
+            channel.setFailOnEntryError(failOnError);
+            channel.setConfigFileName(configFileName);
+            channel.setRowFormatter(new FormatRowToRow(null));
+            return channel;
+            
+        } else if ("MEMORY".equalsIgnoreCase(outputChannelType)) {
             List<OutputChannel> channels = new ArrayList();
-            MemoryCache cache = MemoryCache.getCache(runContext.getId(dataSet));
-            MemoryOutputChannel channel = new MemoryOutputChannel(runContext.getId(dataSet), cache);
+            MemoryCache cache = MemoryCache.getCache(runContext.getId(dataSetName));
+            MemoryOutputChannel channel = new MemoryOutputChannel(runContext.getId(dataSetName), cache);
             channel.setRowFormatter(new FormatRowToRow(null));
             channel.setMaxCount(maxCount);
+            channel.setFailOnEntryError(failOnError);
             return channel;
+
         } else{
-            ConsoleOutputChannel channel = new ConsoleOutputChannel(runContext.getId(dataSet));
+            ConsoleOutputChannel channel = new ConsoleOutputChannel(runContext.getId(dataSetName));
             FormatRowToDelimiteredString f = new FormatRowToDelimiteredString();
             channel.setRowFormatter(f);
             return channel;

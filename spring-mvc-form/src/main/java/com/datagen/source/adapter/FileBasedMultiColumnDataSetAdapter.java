@@ -9,7 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.datagen.DataGenContext;
-
+/*
+ * Read CSV type of file and return a array of string each time. 
+ * 
+ */
 public class FileBasedMultiColumnDataSetAdapter extends AbstractDataSetAdapter<String[]>{
 
     private static Logger m_logger = LoggerFactory.getLogger(FileBasedMultiColumnDataSetAdapter.class);

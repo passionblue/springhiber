@@ -3,6 +3,7 @@ package com.datagen.data;
 public class FDataString extends AbstractFData<String> {
 
     private String data;
+    private Object raw;
     
 //    public FDataString(String fieldName, Object obj) {
 //        super(fieldName, false);
@@ -14,6 +15,8 @@ public class FDataString extends AbstractFData<String> {
         super(fieldName, excludeInOutput);
         if (obj != null)
             data = obj.toString();
+        
+        raw = obj;
     }    
     
 //    public FDataString(Object obj) {
@@ -22,6 +25,13 @@ public class FDataString extends AbstractFData<String> {
 
     @Override
     public String getRawFormat() {
+        return data;
+    }
+
+    
+    
+    @Override
+    public String getStringFormat() {
         return data;
     }
 

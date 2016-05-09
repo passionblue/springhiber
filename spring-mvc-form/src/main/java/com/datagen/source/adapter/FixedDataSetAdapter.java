@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.datagen.DataGenContext;
 
 /*
- * File should contain only one column
+ * Data loaded from input string with comma 
  */
 
 public class FixedDataSetAdapter extends AbstractDataSetAdapter<String>{
@@ -36,7 +36,7 @@ public class FixedDataSetAdapter extends AbstractDataSetAdapter<String>{
     public void init() throws Exception {
         
         dataSet = new ArrayList();
-        dataSet.addAll(Arrays.asList(dataString.split(",")));
+        dataSet.addAll(Arrays.asList(dataString.split(",", -1)));
         
         m_logger.info("Data loaded from string " + dataString + ", count: " + dataSet.size());
     }

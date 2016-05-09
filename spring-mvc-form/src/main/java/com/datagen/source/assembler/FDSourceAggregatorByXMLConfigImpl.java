@@ -14,7 +14,9 @@ import com.datagen.FDataSource;
 import com.datagen.FDataSourceAssembler;
 import com.datagen.meta.FieldMetaData;
 import com.datagen.meta.FieldMetaDataManager;
+import com.datagen.output.OutputChannel;
 import com.datagen.source.impl.FDSourceFactoryByXMLConfiguration;
+import com.datagen.source.util.FDataSourceUtil;
 
 public class FDSourceAggregatorByXMLConfigImpl implements FDataSourceAssembler {
 
@@ -22,12 +24,21 @@ public class FDSourceAggregatorByXMLConfigImpl implements FDataSourceAssembler {
     
     private List<FDataSource> sources; 
     private List<FDataSource> preLoadSources; 
+    private boolean           checkDuplicity;
     
+    
+    public FDSourceAggregatorByXMLConfigImpl() {
+    }
+
+
+    public FDSourceAggregatorByXMLConfigImpl(boolean checkDuplicity) {
+        this.checkDuplicity = checkDuplicity;
+    }
+
+
     private void init() throws Exception {
 
     }
-    
-    
     
     
     @Override
@@ -45,26 +56,47 @@ public class FDSourceAggregatorByXMLConfigImpl implements FDataSourceAssembler {
         return contexts;
     }
 
+    @Override
+    public List<DataGenContext> getImportConfigs(DataGenContext runContext) throws Exception {
+        XMLConfiguration config = runContext.getXmlConfig();
+        String [] files= config.getStringArray("Import");
+        
+        List<DataGenContext> contexts = new ArrayList();
+        
+        for (int i = 0; i < files.length; i++) {
+            DataGenContext preLoadConfig = runContext.getPreLoadToken(files[i]);
+            contexts.add(preLoadConfig);
+        }
+        
+        return contexts;
+    }
 
 
-
+    @Deprecated
     @Override
     public List<FDataSource> getPreLoadSources(DataGenContext runContext)  throws Exception  {
         XMLConfiguration config = runContext.getXmlConfig();
-        
-//        String importGenerate = config.getString("ImportGenerate");
-//        XMLConfiguration preLoadConfig = ConfigUtils.loadConfiguration(file);
-//        if ( StringUtils.isNotBlank(file)) {
-            preLoadSources = initSourcesFromConfig(runContext, config);
-//        }
+        preLoadSources = initSourcesFromConfig(runContext, config);
         return preLoadSources;
     }
 
 
     @Override
     public List<FDataSource> getSources(DataGenContext runContext)  throws Exception  {
-        sources = initSourcesFromConfig(runContext, runContext.getXmlConfig());
-        return sources;
+        
+        List<DataGenContext> noLoadImportConfigs = getImportConfigs(runContext);
+        
+        List<FDataSource> fsources = new ArrayList();
+        for (DataGenContext pContext : noLoadImportConfigs) {
+            List<FDataSource> fDataPreLoadSources = getSources(pContext);
+            fsources.addAll(fDataPreLoadSources);
+        }
+        
+        List<FDataSource> sourcesFromMainConfig = initSourcesFromConfig(runContext, runContext.getXmlConfig());
+        fsources.addAll(sourcesFromMainConfig);
+        FDataSourceUtil.resolveSourceRefs(fsources);
+        FDataSourceUtil.checkDuplicityOnSourceRefs(fsources);
+        return fsources;
     }
 
     public void setSources(List<FDataSource> sources) {
@@ -80,20 +112,25 @@ public class FDSourceAggregatorByXMLConfigImpl implements FDataSourceAssembler {
         
         for (HierarchicalConfiguration sub : fieldsConfigurations) {
 
-            String fieldName = sub.getString("name");
-            String display = sub.getString("display");                
-            String fieldType = sub.getString("type");
-            String dataSet = sub.getString("DataSet");
-            boolean exclude = sub.getBoolean("ExcludeInOutput", false);
-            boolean disable = sub.getBoolean("Disable", false);
+            // These are the sub fields right under <Field>
+            String fieldName    = sub.getString("name");
+            String display      = sub.getString("display");                
+            String fieldType    = sub.getString("type");
+            String dataSet      = sub.getString("DataSet");
+            boolean exclude     = sub.getBoolean("ExcludeInOutput", false);
+            boolean disable     = sub.getBoolean("Disable", false);
 
             if ( disable ) {
                 m_logger.warn("Field {} of DataSet [{}] is set to DISABLED ", fieldName, dataSet);
                 continue;
             }
             
-            FieldMetaData meta = new FieldMetaData(fieldName, display, fieldType);
-            FieldMetaDataManager.getInstance().addMetaData(fieldName, meta);
+            // Check duplicity within the universe. 
+            // For object populator, dont need to check, becausem multiple object could have separate universe in the single runtime.
+            if( checkDuplicity ) {
+                FieldMetaData sourceFieldMetaData = new FieldMetaData(fieldName, display, fieldType);
+                FieldMetaDataManager.getInstance().addMetaData(fieldName, sourceFieldMetaData);
+            }
             
             HierarchicalConfiguration dataSourceConfigs = (HierarchicalConfiguration) sub.configurationAt("DataSource");
             
@@ -112,25 +149,7 @@ public class FDSourceAggregatorByXMLConfigImpl implements FDataSourceAssembler {
 
         return srcs;
     }
-    
-//    private  XMLConfiguration loadConfiguration(String fileName) throws Exception {
-//        List<FDataSource> srcs = new ArrayList();
-//
-//        DefaultExpressionEngine engine = new DefaultExpressionEngine(
-//                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS,
-//                NodeNameMatchers.EQUALS_IGNORE_CASE);
-//
-//        
-//        Parameters params = new Parameters();
-//        FileBasedConfigurationBuilder<XMLConfiguration> builder = new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class).configure(
-//                params.xml()
-//                .setFileName(fileName)
-//                .setExpressionEngine(engine));
-//
-//        XMLConfiguration config = builder.getConfiguration();
-//        
-//        return config;
-//        
-//    }
+
+
     
 }

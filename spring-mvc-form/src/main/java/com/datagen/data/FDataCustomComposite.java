@@ -18,5 +18,12 @@ public class FDataCustomComposite extends AbstractFData<String> {
         super(fieldName, excludeInOutput);
         this.data = data;
     }
+
+    @Override
+    public String getStringFormat() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
     
 }

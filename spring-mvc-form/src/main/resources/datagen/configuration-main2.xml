@@ -1,0 +1,256 @@
+<DataGen>
+	<Version>1.0</Version>
+	<Timestamp>20160416-14:23:34</Timestamp> <!--  Creation Timestamp -->
+	<DataSetName>Main</DataSetName>
+	<ImportGenerate>datagen/configuration-pre.xml</ImportGenerate> <!-- Preloading Data -->
+	<ImportGenerate>datagen/configuration-pre2.xml</ImportGenerate> <!-- Preloading Data -->
+	<ImportGenerate>datagen/configuration-pre3.xml</ImportGenerate> <!-- Preloading Data. Fields from this config can't be used PreloadDatabaseAdapte but can be referenced -->
+
+	<Import>datagen/configuration-pre4.xml</Import> <!-- No Preloading Data -->
+	
+	<Name>Test</Name>
+	<Count>10</Count>
+	<Fields>
+		<!--  composite from pre-loading -->	
+		<Field>
+			<Name>customer</Name>
+			<Display>Customer</Display>
+			<Type>Composite</Type> <!-- multiple fields. Underlying fields name will be used in output -->
+			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomMultipleFDLoadFromAdapter</Class>
+			 	<DataAdapter>
+					<Class>com.datagen.source.adapter.PreloadDatabaseAdapter</Class>	
+					<Property>
+						<dataSet>Customer2</dataSet>
+						<fieldNameList>prefix2,first_name2,last_name2</fieldNameList>
+					</Property>		 	
+			 	</DataAdapter>
+			</DataSource>
+		</Field>
+
+		<Field>
+			<Name>datetime</Name>
+			<Display>Date</Display>
+			<Type>String</Type> 
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomDatetimeGenerator</Class>
+				<Property>
+					<dateStart>20160101-00:00:00</dateStart>
+					<dateEnd>20170101-00:00:00</dateEnd>
+					<dateTimePattern>yyyyMMdd-HH:mm:ss</dateTimePattern>
+				</Property>
+			</DataSource>
+		</Field>
+
+		<Field>
+			<Name>datetime2</Name>
+			<Display>Date</Display>
+			<Type>String</Type> 
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomDatetimeGenerator</Class>
+				<Property>
+					<dateStart>20160101-00:00:00</dateStart>
+					<dateEnd>20170101-00:00:00</dateEnd>
+					<dateTimePattern>yyyyMMdd-HH:mm:ss</dateTimePattern>
+					<outputClass>java.lang.Long</outputClass>
+				</Property>
+			</DataSource>
+		</Field>
+
+
+		<Field>
+			<Name>datetime3</Name>
+			<Display>Date Increment</Display>
+			<Type>String</Type> 
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomDatetimeSequenceGenerator</Class>
+				<Property>
+					<dateTimeStart>20160101-00:00:00.000</dateTimeStart>
+					<maxIntervalInMs>86400000</maxIntervalInMs>
+					<dateTimePattern>yyyyMMdd-HH:mm:ss.SSS</dateTimePattern>
+				</Property>
+			</DataSource>
+		</Field>
+		
+		<Field>
+			<Name>customer3</Name>
+			<Display>Customer</Display>
+			<Type>Composite</Type><!-- multiple fields. Underlying fields name will be used in output -->
+			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomMultipleFDLoadFromAdapter</Class>
+			 	<DataAdapter>
+					<Class>com.datagen.source.adapter.PreloadDatabaseAdapter</Class>	
+					<Property>
+						<dataSet>Customer3</dataSet>
+						<fieldNameList>prefix3</fieldNameList>
+					</Property>		 	
+			 	</DataAdapter>
+			</DataSource>
+		</Field>		
+		
+		<!--  composite from internal mixer from other fields -->	
+		<Field>
+			<Name>pattern_test</Name>
+			<Display>Pattern Test</Display>
+			<Type>Custom</Type> 
+			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
+			<DataSource>
+				<Class>com.datagen.source.impl.FDCustomCompositeSource</Class>
+				<Property>
+					<type>regex</type>
+					<arg>[first_name2] [last_name2] [prefix3] [customer31]</arg>
+				</Property>
+			</DataSource>
+		</Field>		
+
+		<Field>
+			<Name>seq</Name>
+			<Display>Test Seq</Display>
+			<Type>String</Type> 
+			<DataSource>
+				<Class>com.datagen.source.impl.FDSequenceGenerator</Class>
+				<Property>
+					<resetInNewRun>false</resetInNewRun>
+					<fixedSize>true</fixedSize>
+					<sequenceType>HEX</sequenceType>
+					<maxSize>10</maxSize>
+					<useDataSetPrefix>true</useDataSetPrefix>
+					<padding>0</padding>
+					<prefixString>"SEQ="</prefixString> <!--  will be overriden if useDataSetPrefix is set -->
+				</Property>
+			</DataSource>
+		</Field>
+
+		<Field>
+			<Name>seq2</Name>
+			<Display>Test Seq</Display>
+			<Type>String</Type> 
+			<DataSource>
+				<Class>com.datagen.source.impl.FDSequenceGenerator</Class>
+				<Property>
+					<resetInNewRun>true</resetInNewRun>
+					<fixedSize>true</fixedSize>
+					<sequenceType>HEX</sequenceType>
+					<maxSize>10</maxSize>
+					<useDataSetPrefix>false</useDataSetPrefix>
+					<padding>0</padding>
+					<prefixString>SEQ=</prefixString> <!--  will be overriden if useDataSetPrefix is set -->
+				</Property>
+			</DataSource>
+		</Field>
+
+		<Field>
+			<Name>pattern_test2</Name>
+			<Display>Email</Display>
+			<Type>Custom</Type> 
+			<DataSource>
+				<Class>com.datagen.source.impl.FDCustomCompositeSource</Class>
+				<Property>
+					<type>regex</type>
+					<arg>[first_name2].[last_name2]@[email-company]</arg>
+				</Property>
+			</DataSource>
+		</Field>
+
+
+		<Field>
+			<Name>seq2_ref</Name>
+			<Display>Seq2 Ref</Display>
+			<Type>Custom</Type> 
+			<DataSource>
+				<Class>com.datagen.source.impl.FDSourceReference</Class>
+				<Property>
+					<sourceRefName>seq2</sourceRefName>
+				</Property>
+			</DataSource>
+		</Field>
+		
+
+		<Field>
+			<Name>seq3_ref</Name>
+			<Display>Seq2 Ref</Display>
+			<Type>Custom</Type> 
+			<DataSource>
+				<Class>com.datagen.source.impl.FDSourceReference</Class>
+				<Property>
+					<sourceRefName>rand_str</sourceRefName>
+				</Property>
+			</DataSource>
+		</Field>		
+
+	</Fields>
+
+
+
+	<Outputs>
+
+		<Output>
+			<MaxCount>1000</MaxCount> 
+			<Type>Console</Type>
+			<Delimiter>,</Delimiter>
+			<Header>FALSE</Header>
+		</Output>		
+	
+		<Output>
+			<MaxCount>40</MaxCount>
+			<Type>TabFile</Type>
+			<Delimiter>,</Delimiter>
+			<IncludeHeader>TRUE</IncludeHeader>
+			<Filename>output2.txt</Filename>
+			
+			<RowFormatter>
+				<Class>com.datagen.output.formatter.FormatRowToFixedWidthString</Class>
+				<Property>
+					<columnWidth>20</columnWidth>
+					<cutoutExtra>true</cutoutExtra>
+				</Property>
+			</RowFormatter>
+		</Output>		
+			
+<!-- 
+
+		<Output>
+			<Type>DATABASE</Type>
+			<Table>datagen_output</Table>
+			<ConfigFile>datagen/adapter/db/spring-config-hsql.xml</ConfigFile>
+			<FailOnEntryError>true</FailOnEntryError> 
+			<PropertyMap keyFieldName="MapKey" valueFieldName="Name" >
+				<Property>
+					<MapKey>first_name2</MapKey>
+					<Name>first_name</Name>
+					<DataTypeClass>java.lang.String</DataTypeClass>
+				</Property>
+				<Property>
+					<MapKey>first_name2</MapKey>
+					<Name>last_name</Name>
+					<DataTypeClass>java.lang.String</DataTypeClass>
+				</Property>			
+				<Property>
+					<MapKey>year</MapKey>
+					<Name>year</Name>
+					<DataTypeClass>java.lang.Integer</DataTypeClass>
+				</Property>			
+			</PropertyMap>			
+		</Output>
+		
+
+		<Output>
+			<MaxCount>30</MaxCount>
+			<Type>CSV</Type>
+			<Delimiter>,</Delimiter>
+			<IncludeHeader>TRUE</IncludeHeader>
+			<Filename>output.csv</Filename>
+		</Output>
+
+		<Output>
+			<Type>JMS</Type>
+		</Output>
+
+ -->
+ 		
+	</Outputs>
+
+
+</DataGen>

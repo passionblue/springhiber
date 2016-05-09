@@ -1,0 +1,101 @@
+<DataGen>
+	<Version>1.0</Version>
+	<Timestamp>20160416-14:23:34</Timestamp> <!--  Creation Timestamp -->
+	<DataSetName>Main</DataSetName>
+	<Name>Test</Name>
+	<Count>10</Count>
+	<ImportGenerate>datagen/populator/configuration-populator-DEFAULT.xml</ImportGenerate> <!--  -->
+	
+	<Fields>
+		<!--  composite from pre-loading -->	
+		
+		<Field>
+			<Name>java.lang.String</Name>
+			<Display>Customer</Display>
+			<Type>String</Type> <!-- multiple fields. Underlying fields name will be used in output -->
+			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomStringGenerator</Class>
+				 <Property>
+					<prefixString>A</prefixString>				 
+					<appendingString>Z</appendingString>				 
+					<defaultLength>30</defaultLength>
+					<fixedLength>true</fixedLength> <!-- default is true -->
+					<numbersOnly>false</numbersOnly>								
+					<lettersOnly>true</lettersOnly>								
+				 </Property>
+			</DataSource>
+		</Field>		
+
+	</Fields>
+
+	<Outputs>
+
+		<Output>
+			<MaxCount>1000</MaxCount> 
+			<Type>Console</Type>
+			<Delimiter>,</Delimiter>
+			<Header>FALSE</Header>
+		</Output>		
+	
+		<Output>
+			<MaxCount>40</MaxCount>
+			<Type>TabFile</Type>
+			<Delimiter>,</Delimiter>
+			<IncludeHeader>TRUE</IncludeHeader>
+			<Filename>output2.txt</Filename>
+			
+			<RowFormatter>
+				<Class>com.datagen.output.formatter.FormatRowToFixedWidthString</Class>
+				<Property>
+					<columnWidth>20</columnWidth>
+					<cutoutExtra>true</cutoutExtra>
+				</Property>
+			</RowFormatter>
+		</Output>		
+			
+<!-- 
+
+		<Output>
+			<Type>DATABASE</Type>
+			<Table>datagen_output</Table>
+			<ConfigFile>datagen/adapter/db/spring-config-hsql.xml</ConfigFile>
+			<FailOnEntryError>true</FailOnEntryError> 
+			<PropertyMap keyFieldName="MapKey" valueFieldName="Name" >
+				<Property>
+					<MapKey>first_name2</MapKey>
+					<Name>first_name</Name>
+					<DataTypeClass>java.lang.String</DataTypeClass>
+				</Property>
+				<Property>
+					<MapKey>first_name2</MapKey>
+					<Name>last_name</Name>
+					<DataTypeClass>java.lang.String</DataTypeClass>
+				</Property>			
+				<Property>
+					<MapKey>year</MapKey>
+					<Name>year</Name>
+					<DataTypeClass>java.lang.Integer</DataTypeClass>
+				</Property>			
+			</PropertyMap>			
+		</Output>
+		
+
+		<Output>
+			<MaxCount>30</MaxCount>
+			<Type>CSV</Type>
+			<Delimiter>,</Delimiter>
+			<IncludeHeader>TRUE</IncludeHeader>
+			<Filename>output.csv</Filename>
+		</Output>
+
+		<Output>
+			<Type>JMS</Type>
+		</Output>
+
+ -->
+ 		
+	</Outputs>
+
+
+</DataGen>

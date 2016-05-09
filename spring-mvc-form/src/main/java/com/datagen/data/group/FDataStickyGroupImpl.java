@@ -1,4 +1,4 @@
-package com.datagen.data;
+package com.datagen.data.group;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class FDataStickyGroupImpl  extends FDataGroupImpl  implements FDataGroup
     private List<FData> dataList;
 
     public FDataStickyGroupImpl(String fieldName, boolean excludeInOutput, String []data) {
-        super(fieldName, excludeInOutput, data);
+        super(fieldName, excludeInOutput, true, data);
     }
     
     @Override

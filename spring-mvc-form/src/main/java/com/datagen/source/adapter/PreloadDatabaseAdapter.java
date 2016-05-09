@@ -15,6 +15,10 @@ import com.datagen.util.XmlConfigParameterUtil;
 
 /*
  * Pre-load intended dataset into memory and return from that. 
+ * This adapter should not be used with FDRandomSingleFDLoadFromAdapter. Because the field of the source is
+ * only sticky group or field. So the underlying group will not be properly represented. 
+ * 
+ * use FDRandomMultipleFDLoadFromAdapter. so that the underlying Fields will be seamlessly used 
  * 
  */
 

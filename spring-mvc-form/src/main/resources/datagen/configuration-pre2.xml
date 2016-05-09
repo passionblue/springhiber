@@ -59,7 +59,7 @@
 			 	<DataAdapter>
 					<Class>com.datagen.source.adapter.FileBasedDataSetAdapter</Class>	
 					<Property>
-						<fileName>data/names.txt</fileName>
+						<fileName>data/names-single-column.txt</fileName>
 					</Property>		 	
 			 	</DataAdapter>
 			</DataSource>

@@ -8,6 +8,8 @@ import com.datagen.DataGenContext;
 public interface FDataSourceAdapter<T> {
     
     void reload(DataGenContext context) throws Exception;
+    void close();
+    
     int getDataSize();
     T getByPosition(int pos);
 

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.datagen.FData;
 import com.datagen.data.FDataNull;
-import com.datagen.data.FDataString;
+import com.datagen.data.FDataObject;
 
 public class FDRandomNumberGenerator extends AbstractDataSource {
 
@@ -17,6 +17,7 @@ public class FDRandomNumberGenerator extends AbstractDataSource {
     private String rangeStart;
     private String rangeEnd;
     private String numberClass;//
+    private int    precision;
     
     @Override
     public FData nextFData() {
@@ -33,12 +34,27 @@ public class FDRandomNumberGenerator extends AbstractDataSource {
             } else if ( clazz == Double.class ) {
                 data = RandomUtils.nextDouble(Double.parseDouble(rangeStart), Double.parseDouble(rangeEnd));
 
+                if ( precision > 0) {
+                    BigDecimal db = new BigDecimal((Double) data).setScale(precision, BigDecimal.ROUND_HALF_UP);
+                    data = db.doubleValue();
+                }
+                
             } else if ( clazz == Float.class ) {
-                data = RandomUtils.nextDouble(Double.parseDouble(rangeStart), Double.parseDouble(rangeEnd));
-            
+                data = RandomUtils.nextFloat(Float.parseFloat(rangeStart), Float.parseFloat(rangeEnd));
+                
+                if ( precision > 0) {
+                    BigDecimal db = new BigDecimal((Float) data).setScale(precision, BigDecimal.ROUND_HALF_UP);
+                    data = db.floatValue();
+                }
+                
+                
             } else if ( clazz == BigDecimal.class ) {
                 double d = RandomUtils.nextDouble(Double.parseDouble(rangeStart), Double.parseDouble(rangeEnd));
                 data = new BigDecimal(d);
+                
+                if ( precision > 0) {
+                    data = ((BigDecimal)data).setScale(precision, BigDecimal.ROUND_HALF_UP);
+                }                
             }
         
         }
@@ -49,7 +65,8 @@ public class FDRandomNumberGenerator extends AbstractDataSource {
         if ( data == null)
             return new FDataNull(fieldName, excludeInOutput);
         
-        return new FDataString(fieldName, excludeInOutput, data);
+//        return new FDataString(fieldName, excludeInOutput, data);
+        return new FDataObject(fieldName, excludeInOutput, data);
 
     }
     
@@ -80,6 +97,14 @@ public class FDRandomNumberGenerator extends AbstractDataSource {
 
     public void setNumberClass(String numberClass) {
         this.numberClass = numberClass;
+    }
+
+    public int getPrecision() {
+        return precision;
+    }
+
+    public void setPrecision(int precision) {
+        this.precision = precision;
     }
 
 

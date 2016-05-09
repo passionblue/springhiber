@@ -12,4 +12,10 @@ abstract public class AbstractDataSetAdapter<T> implements FDataSourceAdapter<T>
         throw new NotImplementedException("AbstractDataSetAdapter.reload()");
     }
 
+    @Override
+    public void close() {
+        
+    }
+
+    
 }

@@ -5,5 +5,6 @@ public interface FData<T> {
     String      getFieldName();
     void        setFieldName(String fieldName);
     T           getRawFormat();
+    String      getStringFormat();
     boolean     excludeInOutput();
 }

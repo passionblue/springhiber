@@ -5,13 +5,14 @@
 	<ImportGenerate>datagen/configuration-pre.xml</ImportGenerate> <!--  -->
 	<ImportGenerate>datagen/configuration-pre2.xml</ImportGenerate> <!--  -->
 	<ImportGenerate>datagen/configuration-pre3.xml</ImportGenerate> <!--  -->
-	<Name>Test</Name>
-	<Count>1000</Count>
+	<Name>Test1</Name>
+	<Count>5</Count>
 	<Fields>
 		<Field>
 			<Name>id</Name>
 			<Display>Member ID</Display>
 			<DataType>String</DataType> 
+			<Description>Random String</Description>
 			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
 			<DataSource>
 				<Class>com.datagen.source.impl.FDRandomStringGenerator</Class>
@@ -61,8 +62,11 @@
 			<Type>String</Type>
 			<DataSource>
 				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
+				<Property>
+					<columnToLoadForMultiColumnData>0</columnToLoadForMultiColumnData>
+				</Property>
 			 	<DataAdapter>
-					<Class>com.datagen.source.adapter.FileBasedDataSetAdapter</Class>	
+					<Class>com.datagen.source.adapter.FileBasedMultiColumnDataSetAdapter</Class>	
 					<Property>
 						<fileName>data/names.txt</fileName>
 					</Property>		 	
@@ -71,13 +75,14 @@
 		</Field>
 
 		<Field>
-			<Name>lname</Name>
-			<Display>Last Name</Display>
+			<Name>lnamesticky</Name>
+			<Display>Last Name Sticky</Display>
 			<Type>String</Type>
 			<DataSource>
-				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
+				<Class>com.datagen.source.impl.FDRandomMultipleFDLoadFromAdapter</Class>
 				<Property>
 					<columnToLoadForMultiColumnData>0,10</columnToLoadForMultiColumnData>
+					<stickTogether>true</stickTogether>
 				</Property>
 			 	<DataAdapter>
 					<Class>com.datagen.source.adapter.FileBasedMultiColumnDataSetAdapter</Class>	
@@ -88,6 +93,26 @@
 			 	</DataAdapter>
 			</DataSource>
 		</Field>
+		
+		<Field>
+			<Name>lname</Name>
+			<Display>Last Name</Display>
+			<Type>String</Type>
+			<DataSource>
+				<Class>com.datagen.source.impl.FDRandomMultipleFDLoadFromAdapter</Class>
+				<Property>
+					<columnToLoadForMultiColumnData>0,10</columnToLoadForMultiColumnData>
+					<stickTogether>false</stickTogether>
+				</Property>
+			 	<DataAdapter>
+					<Class>com.datagen.source.adapter.FileBasedMultiColumnDataSetAdapter</Class>	
+					<Property>
+						<fileName>data/lastnames.txt</fileName>
+						<skipHeader>true</skipHeader>
+					</Property>		 	
+			 	</DataAdapter>
+			</DataSource>
+		</Field>		
 
 		<Field>
 			<Name>email-company</Name>
@@ -111,6 +136,24 @@
 			<Type>String</Type>
 			<DataSource>
 				<Class>com.datagen.source.impl.CreditCardNumberGenerator</Class>
+			</DataSource>
+		</Field>
+
+		<Field>
+			<Name>seq</Name>
+			<Display>Test Seq</Display>
+			<Type>String</Type> 
+			<DataSource>
+				<Class>com.datagen.source.impl.FDSequenceGenerator</Class>
+				<Property>
+					<resetInNewRun>true</resetInNewRun>
+					<fixedSize>true</fixedSize>
+					<sequenceType>HEX</sequenceType>
+					<maxSize>10</maxSize>
+					<useDataSetPrefix>false</useDataSetPrefix>
+					<padding>0</padding>
+					<prefixString>"SEQ="</prefixString> <!--  will be overriden if useDataSetPrefix is set -->
+				</Property>
 			</DataSource>
 		</Field>
 
@@ -141,7 +184,7 @@
 			<Type>Composite</Type> <!-- multiple fields. Underlying fields name will be used in output -->
 			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
 			<DataSource>
-				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
+				<Class>com.datagen.source.impl.FDRandomMultipleFDLoadFromAdapter</Class>
 			 	<DataAdapter>
 					<Class>com.datagen.source.adapter.PreloadDatabaseAdapter</Class>	
 					<Property>
@@ -158,7 +201,7 @@
 			<Type>Composite</Type><!-- multiple fields. Underlying fields name will be used in output -->
 			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
 			<DataSource>
-				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
+				<Class>com.datagen.source.impl.FDRandomMultipleFDLoadFromAdapter</Class>
 			 	<DataAdapter>
 					<Class>com.datagen.source.adapter.PreloadDatabaseAdapter</Class>	
 					<Property>
@@ -198,6 +241,9 @@
 		</Field>
 
 	</Fields>
+
+
+
 	<Outputs>
 
 		<Output>
@@ -206,32 +252,42 @@
 			<Delimiter>,</Delimiter>
 			<Header>FALSE</Header>
 		</Output>		
+		
+		<Output>
+			<MaxCount>30</MaxCount>
+			<Type>CSV</Type>
+			<Delimiter>,</Delimiter>
+			<IncludeHeader>TRUE</IncludeHeader>
+			<Filename>output.csv</Filename>
+		</Output>		
 	
+		
+
+
 		<Output>
 			<Type>DATABASE</Type>
 			<Table>datagen_output</Table>
 			<ConfigFile>datagen/adapter/db/spring-config-hsql.xml</ConfigFile>
-			<FailOnEntryError>true</FailOnEntryError> <!--  stop when error to enter a entry -->
-			<DBFieldMap>
-				<DBField>
+			<FailOnEntryError>true</FailOnEntryError> 
+			<PropertyMap keyFieldName="MapKey" valueFieldName="Name" contentClass="java.util.Map">
+				<Property>
+					<MapKey>first_name2</MapKey>
 					<Name>first_name</Name>
-					<Map>first_name2</Map>
 					<DataTypeClass>java.lang.String</DataTypeClass>
-				</DBField>
-				<DBField>
+				</Property>
+				<Property>
+					<MapKey>last_name2</MapKey>
 					<Name>last_name</Name>
-					<Map>last_name2</Map>
 					<DataTypeClass>java.lang.String</DataTypeClass>
-				</DBField>			
-				<DBField>
+				</Property>			
+				<Property>
+					<MapKey>year</MapKey>
 					<Name>year</Name>
-					<Map>year</Map>
 					<DataTypeClass>java.lang.Integer</DataTypeClass>
-				</DBField>			
-			</DBFieldMap>			
+				</Property>			
+			</PropertyMap>			
 		</Output>
-		
-<!-- 		
+		<!-- 
 
 		<Output>
 			<MaxCount>30</MaxCount>

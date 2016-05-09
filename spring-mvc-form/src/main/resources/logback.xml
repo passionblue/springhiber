@@ -15,11 +15,17 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 	
+	
+	<logger name="org.apache" level="error" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	
+	
 	<logger name="com.mkyong.form" level="debug" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
 	
-	<root level="info">
+	<root level="debug">
 		<appender-ref ref="STDOUT" />
 	</root>
 

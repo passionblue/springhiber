@@ -7,6 +7,7 @@ public interface FDataGroup extends FData<List<FData>> {
     /*
      * get all the fields
      */
-    List<FData> getUnderlyingData();
+    List<FData> getUnderlyingDatas();
+    FData       getUnderlyingData(String fieldName);
     
 }

@@ -39,7 +39,7 @@ public class FormatRowToDelimiteredString implements OutputRowChannelFormatter<S
             
             if ( fData instanceof FDataGroup ) {
                 FDataGroup group = (FDataGroup) fData;
-                List<FData> dataFields = group.getUnderlyingData();
+                List<FData> dataFields = group.getUnderlyingDatas();
                 for (FData fd : dataFields) {
                     builder.append(fd.getRawFormat().toString()).append(delimiter);
                 }

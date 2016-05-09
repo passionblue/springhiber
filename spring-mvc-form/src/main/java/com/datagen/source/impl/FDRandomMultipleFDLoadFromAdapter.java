@@ -1,13 +1,15 @@
 package com.datagen.source.impl;
 
+import java.util.List;
+
 import org.apache.commons.lang3.RandomUtils;
 
 import com.datagen.FData;
 import com.datagen.configuration.FDConfigurator;
-import com.datagen.data.FDataStickyGroupImpl;
-import com.datagen.data.FDataGroupImpl;
 import com.datagen.data.FDataNull;
 import com.datagen.data.FDataString;
+import com.datagen.data.group.FDataGroupImpl;
+import com.datagen.data.group.FDataStickyGroupImpl;
 import com.datagen.util.DataCopyUtil;
 import com.datagen.util.XmlConfigParameterUtil;
 
@@ -21,6 +23,9 @@ public class FDRandomMultipleFDLoadFromAdapter extends AbstractDataSource {
     private FDConfigurator configurator;
     private String         columnToLoadForMultiColumnData;
     private int[]          selectedColumns;
+    private boolean        stickTogether; // If sticky, the column id or meta data of underlying groups will not be used, because underlying groups 
+    // be treated as a single group ( represented by top) through out to the output.
+    // So pattern is used together, it will not work
     
     public FDRandomMultipleFDLoadFromAdapter(){
         
@@ -40,18 +45,26 @@ public class FDRandomMultipleFDLoadFromAdapter extends AbstractDataSource {
             String [] array = (String[]) data;
 
             if ( selectedColumns != null && selectedColumns.length > 0 ) {
-                
                 if ( selectedColumns.length == 1) 
                     return new FDataString(fieldName, excludeInOutput, array[selectedColumns[0]]);
                 else {
                     String [] selectedData = DataCopyUtil.copyStringArrayByIndex(array, selectedColumns);;
-                    return new FDataGroupImpl(fieldName,excludeInOutput, selectedData); // This is where different. FDataGroupAsSingleImpl is not used
+                    return new FDataGroupImpl(fieldName,excludeInOutput, stickTogether, selectedData); // This is where different. FDataGroupAsSingleImpl is not used
                 }
             } else {
-                return new FDataStickyGroupImpl(fieldName,excludeInOutput, array);
+                return new FDataGroupImpl(fieldName,excludeInOutput, stickTogether,  array);
             } 
             
+        }else if ( data instanceof FData ) {
+
+            ((FData) data).setFieldName(fieldName);
+            return (FData) data;
+            
+        } else if ( data instanceof List ) {
+            
+            return new FDataGroupImpl( fieldName, excludeInOutput, stickTogether, (List<FData>) data);
         }
+        
         
         return new FDataNull(fieldName, excludeInOutput);
     }
@@ -93,7 +106,16 @@ public class FDRandomMultipleFDLoadFromAdapter extends AbstractDataSource {
     }
 
 
+    public boolean isStickTogether() {
+        return stickTogether;
+    }
 
 
+    public void setStickTogether(boolean stickTogether) {
+        this.stickTogether = stickTogether;
+    }
+
+
+    
     
 }

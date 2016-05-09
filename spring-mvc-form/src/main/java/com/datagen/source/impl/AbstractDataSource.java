@@ -60,12 +60,9 @@ abstract public class AbstractDataSource implements FDataSource {
         return b.toString();
     }
     
-    
-    
-    
     @Override
     public FData generateNext() {
-       
+        
         if ( faultGenerater != null && faultGenerater.faultRaise()) { 
             Object fault = faultGenerater.getFaultData();
             
@@ -88,12 +85,17 @@ abstract public class AbstractDataSource implements FDataSource {
     abstract FData nextFData();
     abstract FData nextFData(Object arg);    
     
-    
     @Override
     public void reload(DataGenContext context) throws Exception{
         if ( dataAdapter != null)
             dataAdapter.reload(context);
         m_logger.info("DataSource data loaded [{}]", fieldName);
+    }
+
+    @Override
+    public void close() {
+        if ( dataAdapter != null)
+            dataAdapter.close();
     }
 
     public String getFieldName() {

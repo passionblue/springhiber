@@ -236,6 +236,21 @@
 		  <version>0.0.4</version>
 		</dependency>
 
+		<!-- messaging -->
+
+		<dependency>
+			<groupId>javax.jms</groupId>
+			<artifactId>javax.jms-api</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+
+<!-- MXL -->
+		<dependency>
+		<groupId>org.apache.commons</groupId>
+		<artifactId>commons-digester3</artifactId>
+		<version>3.2</version>
+		</dependency>
+		
 
 	</dependencies>
 

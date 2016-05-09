@@ -1,0 +1,32 @@
+package com.datagen.data;
+
+public class FDataStringArray extends AbstractFData<String[]> {
+
+    private String data[];
+    
+    public FDataStringArray(String fieldName, boolean excludeInOutput, String str[]) {
+        super(fieldName, excludeInOutput);
+        data = str;
+    }    
+    
+
+    @Override
+    public String[] getRawFormat() {
+        return data;
+    }
+
+    @Override
+    public String toString() {
+        return "FDataString [data=" + data + "]";
+    }
+
+
+    @Override
+    public String getStringFormat() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    
+    
+}

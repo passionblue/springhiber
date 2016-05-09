@@ -11,8 +11,6 @@ import java.nio.file.StandardCopyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.datagen.FDataRow;
-
 public class CSVFileOutputChannel extends  AbstractOutputChannel<String> {
 
     private static Logger m_logger = LoggerFactory.getLogger(CSVFileOutputChannel.class);

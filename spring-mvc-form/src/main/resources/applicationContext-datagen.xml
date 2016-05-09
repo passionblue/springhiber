@@ -26,21 +26,21 @@
 
 	<bean id="dataGenerator" class="com.datagen.main.AutositeDataGenerator"
 		init-method="init" >
-		<property name="sourceAssembler" ref="SourceAssembler2" />
+		<property name="sourceAssembler" ref="SourceAssembler" />
 		<property name="transformerFactory" ref="TransformerFactory" />
 		<property name="outputChannelFactory" ref="DeliveryFactory" />
 	</bean>
 
 
-	<bean id="SourceAssembler" class="com.datagen.source.assembler.FDSourceAggregatorByDemo" init-method="init" lazy-init="true">
+	<bean id="SourceAssembler3" class="com.datagen.source.assembler.FDSourceAggregatorByDemo" init-method="init" lazy-init="true">
 
 	</bean>
 
-	<bean id="SourceAssembler2" class="com.datagen.source.assembler.FDSourceAggregatorByXMLConfigImpl" init-method="init" >
+	<bean id="SourceAssembler" class="com.datagen.source.assembler.FDSourceAggregatorByXMLConfigImpl" init-method="init" >
 
 	</bean>
 
-	<bean id="DeliveryFactory" class="com.datagen.output.impl.SimpleOutputChannelFactory" init-method="init" >
+	<bean id="DeliveryFactory" class="com.datagen.output.factory.SimpleOutputChannelFactory" init-method="init" >
 
 	</bean>
 	

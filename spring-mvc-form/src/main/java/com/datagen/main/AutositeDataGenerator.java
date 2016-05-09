@@ -61,13 +61,13 @@ public class AutositeDataGenerator {
         List<DataGenContext> preLoadConfigs = sourceAssembler.getPreLoadConfigs(runContext);
         
         for (DataGenContext pContext : preLoadConfigs) {
-            List<FDataSource> fDataPreLoadSources = sourceAssembler.getPreLoadSources(pContext);
+            List<FDataSource> fDataPreLoadSources = sourceAssembler.getSources(pContext);
             List<OutputChannel> preLoadChannels = outputChannelFactory.getPreLoadChannels(pContext);
             runDataForSources(pContext, fDataPreLoadSources, preLoadChannels);
         }
         
         List<FDataSource> fDataSources = sourceAssembler.getSources(runContext);
-        List<OutputChannel> channels = outputChannelFactory.getChannels(runContext);
+        List<OutputChannel> channels = outputChannelFactory.getPreLoadChannels(runContext);
         runDataForSources(runContext, fDataSources, channels);
 
         
@@ -99,6 +99,8 @@ public class AutositeDataGenerator {
             ds.reload(runContext);
         }
         
+        boolean logClassOnce = false;
+        
         for (int i = 0; i < runContext.getDataCount() ; i++) {
             
             FDataRow dataRow = new FDataRowImpl();
@@ -111,10 +113,16 @@ public class AutositeDataGenerator {
                 if ( fData instanceof FDataGroup ) {
                     FDataGroup dg = (FDataGroup) fData;
                     dataRow.addData(dg.getRawFormat());
-                    m_logger.debug("--(G)-> field={}, Source={}, dataClass={}, size={}, underlying={}, exclude={}, Sexclude={}", dg.getFieldName(), fDataSource.getClass().getSimpleName(), fData.getClass().getSimpleName(), dg.getRawFormat().size(), dg.getUnderlyingData().size(), dg.excludeInOutput(), fDataSource.excludeInOutput());
+                    m_logger.debug("--(G)-> field={}, Source={}, dataClass={}, size={}, underlying={}, exclude={}, Sexclude={}", dg.getFieldName(), fDataSource.getClass().getSimpleName(), fData.getClass().getSimpleName(), dg.getRawFormat().size(), dg.getUnderlyingDatas().size(), dg.excludeInOutput(), fDataSource.excludeInOutput());
                 } else {
                     dataRow.addData(fData);
                     m_logger.debug("--(F)-> field={}, Source={}, dataClass={}, exclude={}, Sexclude={}", fData.getFieldName(), fDataSource.getClass().getSimpleName(), fData.getClass().getSimpleName(), fData.excludeInOutput(), fDataSource.excludeInOutput());
+                }
+            }
+            
+            if ( !logClassOnce) {
+                for (FData fData : dataRow.getData(false)) {
+                    m_logger.debug("[{}]\t[{}]", fData.getClass().getSimpleName(), fData.getFieldName());
                 }
             }
             
@@ -153,7 +161,8 @@ public class AutositeDataGenerator {
             for (OutputChannel deliveryChannel : channels) {
                 deliveryChannel.write(formattedRow);
             }
-        }        
+            logClassOnce = true;
+        } // END of loop        
 
         for (OutputChannel deliveryChannel : channels) {
             deliveryChannel.close();;

@@ -40,11 +40,12 @@ public class FormatRowHeaderToDelimiteredString implements OutputRowChannelForma
             
             if ( fData instanceof FDataGroup ) {
                 FDataGroup group = (FDataGroup) fData;
-                List<FData> dataFields = group.getUnderlyingData();
+                List<FData> dataFields = group.getUnderlyingDatas();
                 int subIndex = 0;
                 for (FData fd : dataFields) {
                     
                     FieldMetaData meta = FieldMetaDataManager.getInstance().getMetaData(fd.getFieldName());
+                    
                     // Because data gets splitted from one singe FData record, add sub fix name at the end of field header name 
                     builder.append(meta==null?fd.getFieldName(): meta.getDisplay()).append("(" + subIndex + ")").append(delimiter); 
                     subIndex++;

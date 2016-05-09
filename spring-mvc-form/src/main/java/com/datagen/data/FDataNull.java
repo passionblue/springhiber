@@ -12,4 +12,9 @@ public class FDataNull extends AbstractFData<Object>  {
         return null;
     }
 
+    @Override
+    public String getStringFormat() {
+        return null;
+    }
+    
 }

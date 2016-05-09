@@ -37,7 +37,7 @@ abstract public class AbstractOutputChannel<T> implements OutputChannel {
     public final void write(FDataRow dataRow) throws Exception {
         m_logger.debug("Writing to output channel [" + id + "]");
 
-        if ( includeHeader && !headerAdded ) {
+        if ( includeHeader && !headerAdded && headerFormatter != null ) {
             writeHeaderToChannel(headerFormatter.format(dataRow));
             m_logger.debug("Completed Header to output channel [" + id + "]");
         }

@@ -1,4 +1,4 @@
-package com.datagen.output.impl;
+package com.datagen.output.factory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,10 +15,18 @@ import com.datagen.DataGenContext;
 import com.datagen.cache.MemoryCache;
 import com.datagen.output.OutputChannel;
 import com.datagen.output.OutputChannelFactory;
+import com.datagen.output.OutputRowChannelFormatter;
 import com.datagen.output.formatter.FormatRowHeaderToDelimiteredString;
 import com.datagen.output.formatter.FormatRowToDelimiteredString;
+import com.datagen.output.formatter.FormatRowToFixedWidthString;
 import com.datagen.output.formatter.FormatRowToRow;
+import com.datagen.output.impl.CSVFileOutputChannel;
+import com.datagen.output.impl.ConsoleOutputChannel;
+import com.datagen.output.impl.DatabaseOutputChannel;
 import com.datagen.output.impl.DatabaseOutputChannel.FieldMeta;
+import com.datagen.output.impl.FileOutputChannel;
+import com.datagen.output.impl.MemoryOutputChannel;
+import com.datagen.util.ConfigUtils;
 
 public class SimpleOutputChannelFactory implements OutputChannelFactory{
 
@@ -28,6 +36,7 @@ public class SimpleOutputChannelFactory implements OutputChannelFactory{
         
     }
     
+    @Deprecated
     @Override
     public List<OutputChannel> getChannels(DataGenContext runContext) throws Exception {
 
@@ -76,8 +85,8 @@ public class SimpleOutputChannelFactory implements OutputChannelFactory{
     private OutputChannel createChannel(DataGenContext runContext, HierarchicalConfiguration config, String dataSetName) throws Exception {
         
         
-        String outputChannelType = config.getString("Type", null);
-        int maxCount = config.getInt("MaxCount", 0);
+        String outputChannelType    = config.getString("Type", null);
+        int maxCount                = config.getInt("MaxCount", 0);
         boolean failOnError         = config.getBoolean("FailOnEntryError", false);
         
         if ("CSV".equalsIgnoreCase(outputChannelType)) {
@@ -94,20 +103,63 @@ public class SimpleOutputChannelFactory implements OutputChannelFactory{
             channel.setFailOnEntryError(failOnError);
             return channel;
             
+        } else if ("TabFile".equalsIgnoreCase(outputChannelType)) {
+            
+            String fileName         = config.getString("FileName");
+            String delimiter        = config.getString("Delimiter", " ");
+            boolean includeHeader   = config.getBoolean("IncludeHeader");
+            int    columnWidth      = config.getInt("ColumnWidth", 30);
+            
+            
+            OutputRowChannelFormatter formatter = (OutputRowChannelFormatter) ConfigUtils.createObject(config.configurationAt("RowFormatter"));
+            
+            
+            FileOutputChannel channel = new FileOutputChannel (runContext.getId(dataSetName), maxCount, fileName, includeHeader);
+//            FormatRowToDelimiteredString f = new FormatRowToDelimiteredString(delimiter);
+            channel.setRowFormatter(formatter);
+//            FormatRowHeaderToDelimiteredString header = new FormatRowHeaderToDelimiteredString(delimiter);
+//            channel.setHeaderFormatter(header);
+            channel.setFailOnEntryError(failOnError);
+            return channel;    
+            
         } else if ("DATABASE".equalsIgnoreCase(outputChannelType)) {
             
             
             String tableName         = config.getString("table");
             String configFileName    = config.getString("ConfigFile");
             
-            List<HierarchicalConfiguration<ImmutableNode>> fieldsConfigurations = config.configurationsAt("DBFieldMap.DBField");
             
-            Map<String, FieldMeta> fieldMetaMap = new HashMap();
+            
+            Map<String, Map> ret = ConfigUtils.convertToPropertyMapMap(config, Map.class);
+            
+            Map<String, FieldMeta> fieldMetaMap = new HashMap();;
+            
+            for (Map.Entry<String, Map> entry : ret.entrySet()) {
+                String key = (String) entry.getKey();
+                Map mapMap = (Map) entry.getValue();
+                
+                String map = (String) mapMap.get("MapKey");                
+                String name = (String) mapMap.get("Name");
+                String dataTypeClass = (String) mapMap.get("DataTypeClass");
+                
+                DatabaseOutputChannel.FieldMeta fieldMap = new DatabaseOutputChannel.FieldMeta(name, map, Class.forName(dataTypeClass));
+                fieldMetaMap.put(map, fieldMap);;;
+            }
+             
+             
+            
+            List<HierarchicalConfiguration<ImmutableNode>> fieldsConfigurations = config.configurationsAt("PropertyMap.Property");
+
+            String keyFieldName = config.getString("PropertyMap[@keyFieldName]");
+            String valueFieldName = config.getString("PropertyMap[@valueFieldName]");
+            
+            
+            fieldMetaMap = new HashMap();
             
             for (HierarchicalConfiguration sub : fieldsConfigurations) {
-
-                String name = sub.getString("Name");
-                String map = sub.getString("Map");                
+                
+                String map = sub.getString(keyFieldName);                
+                String name = sub.getString(valueFieldName);
                 String dataTypeClass = sub.getString("DataTypeClass");
 
                 DatabaseOutputChannel.FieldMeta fieldMap = new DatabaseOutputChannel.FieldMeta(name, map, Class.forName(dataTypeClass));

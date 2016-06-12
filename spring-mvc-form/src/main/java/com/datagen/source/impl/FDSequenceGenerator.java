@@ -61,7 +61,7 @@ public class FDSequenceGenerator extends AbstractDataSource {
     }
 
     @Override
-    FData nextFData() {
+    public FData nextFData() {
         
         long seq = incrementSeq();
         String seqStr = String.valueOf(seq);
@@ -85,7 +85,7 @@ public class FDSequenceGenerator extends AbstractDataSource {
     }
 
     @Override
-    FData nextFData(Object arg) {
+    public FData nextFData(Object arg) {
         // TODO Auto-generated method stub
         return null;
     }

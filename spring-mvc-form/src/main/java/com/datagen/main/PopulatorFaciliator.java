@@ -10,6 +10,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.datagen.FDataSourceAssembler;
 import com.datagen.FDataTransformFactory;
 import com.datagen.output.OutputChannelFactory;
+import com.datagen.populate.ObjectPopulator;
 
 
 public class PopulatorFaciliator {

@@ -2,42 +2,29 @@
 	<Version>1.0</Version>
 	<Timestamp>20160416-14:23:34</Timestamp> <!--  Creation Timestamp -->
 	<DataSetName>Main</DataSetName>
-	<Name>Test</Name>
-	<Count>10</Count>
-	<Import>datagen/populator/configuration-populator-DEFAULT.xml</Import> <!--  -->
+	<ImportGenerate>datagen/import/configuration-pre.xml</ImportGenerate> <!-- Preloading Data -->
 	
+	<Name>ImportTesting</Name>
+	<Count>10</Count>
 	<Fields>
-
 		<Field>
-			<Name>intList</Name>
+			<Name>name</Name>
 			<Display>Customer</Display>
 			<Type>Composite</Type> <!-- multiple fields. Underlying fields name will be used in output -->
 			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
 			<DataSource>
-				<Class>com.datagen.source.impl.FDRandomNumberGenerator</Class>
-				 <Property>
-					<rangeStart>300</rangeStart>												
-					<rangeEnd>500</rangeEnd>												
-					<numberClass>java.lang.Integer</numberClass>												
-				 </Property>
+				<Class>com.datagen.source.impl.FDRandomMultipleFDLoadFromAdapter</Class>
+			 	<DataAdapter>
+					<Class>com.datagen.source.adapter.PreloadedInMemoryDataAdapter</Class>	
+					<Property>
+						<dataSet>Customer</dataSet>
+						<fieldNameList>prefix,first_name,last_name</fieldNameList>
+					</Property>		 	
+			 	</DataAdapter>
 			</DataSource>
+			
+			
 		</Field>
-
-		<Field>
-			<Name>orderIdMap</Name>
-			<Display>Customer</Display>
-			<Type>Composite</Type> <!-- multiple fields. Underlying fields name will be used in output -->
-			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
-			<DataSource>
-				<Class>com.datagen.source.impl.FDRandomNumberGenerator</Class>
-				 <Property>
-					<rangeStart>1000</rangeStart>												
-					<rangeEnd>9000</rangeEnd>												
-					<numberClass>java.lang.Integer</numberClass>												
-				 </Property>
-			</DataSource>
-		</Field>
-		
 	</Fields>
 
 	<Outputs>
@@ -48,9 +35,19 @@
 			<Delimiter>,</Delimiter>
 			<Header>FALSE</Header>
 		</Output>		
+
+		<Output>
+			<MaxCount>30</MaxCount>
+			<Type>CSV</Type>
+			<Delimiter>,</Delimiter>
+			<IncludeHeader>TRUE</IncludeHeader>
+			<Filename>output.csv</Filename>
+			
+			
+		</Output>	
 	
 		<Output>
-			<MaxCount>40</MaxCount>
+			<MaxCount>50</MaxCount>
 			<Type>TabFile</Type>
 			<Delimiter>,</Delimiter>
 			<IncludeHeader>TRUE</IncludeHeader>
@@ -59,7 +56,7 @@
 			<RowFormatter>
 				<Class>com.datagen.output.formatter.FormatRowToFixedWidthString</Class>
 				<Property>
-					<columnWidth>20</columnWidth>
+					<columnWidth>40</columnWidth>
 					<cutoutExtra>true</cutoutExtra>
 				</Property>
 			</RowFormatter>
@@ -92,13 +89,7 @@
 		</Output>
 		
 
-		<Output>
-			<MaxCount>30</MaxCount>
-			<Type>CSV</Type>
-			<Delimiter>,</Delimiter>
-			<IncludeHeader>TRUE</IncludeHeader>
-			<Filename>output.csv</Filename>
-		</Output>
+
 
 		<Output>
 			<Type>JMS</Type>

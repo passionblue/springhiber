@@ -6,16 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PersonService {
+public class DBOutService {
 
-    private PersonDao personDao;
+    private DBOutDao personDao;
 
-    public PersonDao getPersonDao() {
+    public DBOutDao getDbOutDao() {
         return personDao;
     }
 
     @Autowired
-    public void setPersonDao(PersonDao personDao) {
+    public void setPersonDao(DBOutDao personDao) {
         this.personDao = personDao;
     }
 

@@ -2,15 +2,16 @@
 	<Version>1.0</Version>
 	<Timestamp>20160416-14:23:34</Timestamp> <!--  Creation Timestamp -->
 	<DataSetName>Main</DataSetName>
-	<ImportGenerate>datagen/configuration-pre.xml</ImportGenerate> <!--  -->
-	<ImportGenerate>datagen/configuration-pre2.xml</ImportGenerate> <!--  -->
-	<ImportGenerate>datagen/configuration-pre3.xml</ImportGenerate> <!--  -->
+	<ImportGenerate>datagen/import/configuration-pre.xml</ImportGenerate> <!--  -->
+	<ImportGenerate>datagen/import/configuration-pre2.xml</ImportGenerate> <!--  -->
+	<ImportGenerate>datagen/import/configuration-pre3.xml</ImportGenerate> <!--  -->
 	<Name>Test1</Name>
 	<Count>5</Count>
 	<Fields>
 		<Field>
 			<Name>id</Name>
 			<Display>Member ID</Display>
+			<Type>Plain</Type> 
 			<DataType>String</DataType> 
 			<Description>Random String</Description>
 			<ExcludeInOutput>false</ExcludeInOutput> <!-- make invisible in output -->
@@ -186,7 +187,7 @@
 			<DataSource>
 				<Class>com.datagen.source.impl.FDRandomMultipleFDLoadFromAdapter</Class>
 			 	<DataAdapter>
-					<Class>com.datagen.source.adapter.PreloadDatabaseAdapter</Class>	
+					<Class>com.datagen.source.adapter.PreloadedInMemoryDataAdapter</Class>	
 					<Property>
 						<dataSet>Customer2</dataSet>
 						<fieldNameList>prefix2,first_name2,last_name2</fieldNameList>
@@ -203,7 +204,7 @@
 			<DataSource>
 				<Class>com.datagen.source.impl.FDRandomMultipleFDLoadFromAdapter</Class>
 			 	<DataAdapter>
-					<Class>com.datagen.source.adapter.PreloadDatabaseAdapter</Class>	
+					<Class>com.datagen.source.adapter.PreloadedInMemoryDataAdapter</Class>	
 					<Property>
 						<dataSet>Customer3</dataSet>
 						<fieldNameList>prefix3</fieldNameList>
@@ -262,7 +263,7 @@
 		</Output>		
 	
 		
-
+<!-- 
 
 		<Output>
 			<Type>DATABASE</Type>
@@ -287,7 +288,7 @@
 				</Property>			
 			</PropertyMap>			
 		</Output>
-		<!-- 
+		
 
 		<Output>
 			<MaxCount>30</MaxCount>

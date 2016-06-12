@@ -191,24 +191,6 @@
 			<Delimiter>,</Delimiter>
 			<Header>FALSE</Header>
 		</Output>		
-	
-		<Output>
-			<MaxCount>50</MaxCount>
-			<Type>TabFile</Type>
-			<Delimiter>,</Delimiter>
-			<IncludeHeader>TRUE</IncludeHeader>
-			<Filename>output2.txt</Filename>
-			
-			<RowFormatter>
-				<Class>com.datagen.output.formatter.FormatRowToFixedWidthString</Class>
-				<Property>
-					<columnWidth>40</columnWidth>
-					<cutoutExtra>true</cutoutExtra>
-				</Property>
-			</RowFormatter>
-		</Output>		
-			
-<!-- 
 
 		<Output>
 			<Type>DATABASE</Type>
@@ -233,7 +215,26 @@
 				</Property>			
 			</PropertyMap>			
 		</Output>
-		
+	
+			
+<!-- 
+
+			
+		<Output>
+			<MaxCount>50</MaxCount>
+			<Type>TabFile</Type>
+			<Delimiter>,</Delimiter>
+			<IncludeHeader>TRUE</IncludeHeader>
+			<Filename>output2.txt</Filename>
+			
+			<RowFormatter>
+				<Class>com.datagen.output.formatter.FormatRowToFixedWidthString</Class>
+				<Property>
+					<columnWidth>40</columnWidth>
+					<cutoutExtra>true</cutoutExtra>
+				</Property>
+			</RowFormatter>
+		</Output>	
 
 		<Output>
 			<MaxCount>30</MaxCount>

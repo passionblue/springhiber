@@ -22,9 +22,9 @@ import com.datagen.util.XmlConfigParameterUtil;
  * 
  */
 
-public class PreloadDatabaseAdapter  extends AbstractDataSetAdapter<List<FData>>{
+public class PreloadedInMemoryDataAdapter  extends AbstractDataSetAdapter<List<FData>>{
     
-    private static Logger m_logger = LoggerFactory.getLogger(PreloadDatabaseAdapter.class);
+    private static Logger m_logger = LoggerFactory.getLogger(PreloadedInMemoryDataAdapter.class);
     
     private CacheInterface cacheInterface = MemoryCache.instance;
 
@@ -32,11 +32,11 @@ public class PreloadDatabaseAdapter  extends AbstractDataSetAdapter<List<FData>>
     private String fieldNameList;
     private List<FDataRow> dataList = new ArrayList();
 
-    public PreloadDatabaseAdapter() {
+    public PreloadedInMemoryDataAdapter() {
         
     }
 
-    public PreloadDatabaseAdapter(String id) {
+    public PreloadedInMemoryDataAdapter(String id) {
         
     }
     

@@ -66,6 +66,11 @@ public class AutositeDataGenerator {
             runDataForSources(pContext, fDataPreLoadSources, preLoadChannels);
         }
         
+        m_logger.debug("##################################################################################");
+        m_logger.debug("# PreLoaded Completed");
+        m_logger.debug("##################################################################################");
+        
+        
         List<FDataSource> fDataSources = sourceAssembler.getSources(runContext);
         List<OutputChannel> channels = outputChannelFactory.getPreLoadChannels(runContext);
         runDataForSources(runContext, fDataSources, channels);
@@ -127,7 +132,7 @@ public class AutositeDataGenerator {
             }
             
             /*
-             *  transform data
+             *  Transform data
              */
             
             FDataRow formattedRow = new FDataRowImpl();

@@ -1,27 +1,12 @@
 <DataGen>
 	<Version>1.0</Version>
-	<DataSetName>Customer3</DataSetName><!-- This required for PreloadDatabaseAdapter in main config -->
+	<DataSetName>Customer4</DataSetName><!-- This required for PreloadedInMemoryDataAdapter in main config -->
 	<ImportGenerate></ImportGenerate> <!--  -->
 	<Count>1000</Count> <!-- -1, unlimited, 0 is random -->
 	<Fields>
-
-		<Field>
-			<Name>prefix3</Name>
-			<Display>Prefix3</Display>
-			<Type>String</Type>
-			<DataSource>
-				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
-			 	<DataAdapter>
-					<Class>com.datagen.source.adapter.FixedDataSetAdapter</Class>	
-					<Property>
-						<dataString>XMr,XMrs,XMs</dataString>
-					</Property>		 	
-			 	</DataAdapter>
-			</DataSource>
-		</Field>
 			
 		<Field>
-			<Name>first_name3</Name>
+			<Name>rand_str</Name>
 			<Display>First Name</Display>
 			<DataType>String</DataType> 
 			<DataSource>
@@ -44,28 +29,21 @@
 			</Fault>	
 		</Field>
 		
+
 		<Field>
-			<Name>last_name3</Name>
-			<Display>Last Name</Display>
+			<Name>email-company</Name>
+			<Display>Email Carrier</Display>
 			<Type>String</Type>
+			<ExcludeInOutput>true</ExcludeInOutput> <!-- make invisible in output -->
 			<DataSource>
 				<Class>com.datagen.source.impl.FDRandomSingleFDLoadFromAdapter</Class>
 			 	<DataAdapter>
-					<Class>com.datagen.source.adapter.FileBasedDataSetAdapter</Class>	
+					<Class>com.datagen.source.adapter.FixedDataSetAdapter</Class>	
 					<Property>
-						<fileName>data/names.txt</fileName>
+						<dataString>yahoo.com,gmail.com,hotmail.com,blah.com</dataString>
 					</Property>		 	
 			 	</DataAdapter>
 			</DataSource>
-		</Field>
-
+		</Field>		
 	</Fields>
-	<Outputs>
-		<Output>
-			<Type>MEMORY</Type>
-			<MaxCount>10</MaxCount>
-		</Output>
-	</Outputs>
-
-
 </DataGen>

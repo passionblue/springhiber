@@ -12,7 +12,7 @@ public class NoopTransformer extends AbstractFDataTransformer {
     
     @Override
     public FData transform(FData source) {
-        m_logger.debug("NoopTransformer.transform()");
+//        m_logger.debug("NoopTransformer.transform()");
         return source;
     }
 

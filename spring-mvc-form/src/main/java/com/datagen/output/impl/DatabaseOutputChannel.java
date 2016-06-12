@@ -11,14 +11,14 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.datagen.FData;
 import com.datagen.FDataRow;
-import com.datagen.output.impl.db.PersonService;
+import com.datagen.output.impl.db.DBOutService;
 
 public class DatabaseOutputChannel extends  AbstractOutputChannel<FDataRow> {
 
     private static Logger m_logger = LoggerFactory.getLogger(DatabaseOutputChannel.class);
 
     
-    private PersonService personService;
+    private DBOutService personService;
     private String tableName;
     private Map<String, FieldMeta> fieldMetaMap;
     private String configFileName;
@@ -31,7 +31,7 @@ public class DatabaseOutputChannel extends  AbstractOutputChannel<FDataRow> {
     @Override
     public void open() throws Exception {
         ApplicationContext context = new ClassPathXmlApplicationContext(configFileName);
-        personService = (PersonService) context.getBean("personService");
+        personService = (DBOutService) context.getBean("DBOutService");
     }
 
     @Override
@@ -57,23 +57,19 @@ public class DatabaseOutputChannel extends  AbstractOutputChannel<FDataRow> {
                 sqlString.append(fieldMeta.getName()).append(",");
                 
                 if ( fieldMeta.getDataClass() == String.class ) {
-                    valueString.append("'").append(fData.getRawFormat().toString()).append("'").append(",");
+                    valueString.append("'").append(fData.getStringFormat()).append("'").append(",");
                 } else {
-                    valueString.append(fData.getRawFormat().toString()).append(",");
+                    valueString.append(fData.getStringFormat()).append(",");
                 }
             }
         }
-        
-        
-//        sqlString = sqlString.deleteCharAt(sqlString.length()-1);
-//        valueString = valueString.deleteCharAt(valueString.length()-1);
 
         sqlString.append("id");
         valueString.append(RandomUtils.nextInt(0, 1000000));
         
         sqlString.append(") VALUES (").append(valueString).append(")");
 
-        personService.getPersonDao().executeSql(sqlString.toString());
+        personService.getDbOutDao().executeSql(sqlString.toString());
     }
 
     @Override
@@ -88,11 +84,11 @@ public class DatabaseOutputChannel extends  AbstractOutputChannel<FDataRow> {
         return false;
     }
     
-    public PersonService getPersonService() {
+    public DBOutService getPersonService() {
         return personService;
     }
 
-    public void setPersonService(PersonService personService) {
+    public void setPersonService(DBOutService personService) {
         this.personService = personService;
     }
 

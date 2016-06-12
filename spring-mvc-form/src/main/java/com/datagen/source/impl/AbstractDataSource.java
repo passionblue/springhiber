@@ -25,7 +25,8 @@ abstract public class AbstractDataSource implements FDataSource {
     protected String fieldName;
     protected String prefixString;
     protected String appendingString;
-    protected String mask;
+    protected String mask; //?
+    protected String type;
     protected FaultGenerater faultGenerater;
     protected boolean excludeInOutput;
     
@@ -82,8 +83,8 @@ abstract public class AbstractDataSource implements FDataSource {
         return  nextFData(arg);
     }
 
-    abstract FData nextFData();
-    abstract FData nextFData(Object arg);    
+    public  abstract FData nextFData();
+    public  abstract FData nextFData(Object arg);    
     
     @Override
     public void reload(DataGenContext context) throws Exception{
@@ -168,6 +169,18 @@ abstract public class AbstractDataSource implements FDataSource {
 
     public void setExcludeInOutput(boolean excludeInOutput) {
         this.excludeInOutput = excludeInOutput;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean isExcludeInOutput() {
+        return excludeInOutput;
     }
 
 

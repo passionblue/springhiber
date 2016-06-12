@@ -1,4 +1,4 @@
-package com.datagen.main;
+package com.datagen.populate;
 
 import java.beans.PropertyDescriptor;
 import java.util.Collection;
@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.datagen.DataGenContext;
 import com.datagen.FData;
 import com.datagen.FDataSource;
-import com.datagen.populate.PopulatorUtil;
+import com.datagen.main.PopulatorFaciliator;
 import com.datagen.test.Person;
 
 public class ObjectPopulator<T> {

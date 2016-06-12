@@ -3,6 +3,7 @@ package com.datagen.source.assembler;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.tree.ImmutableNode;
@@ -95,7 +96,7 @@ public class FDSourceAggregatorByXMLConfigImpl implements FDataSourceAssembler {
         List<FDataSource> sourcesFromMainConfig = initSourcesFromConfig(runContext, runContext.getXmlConfig());
         fsources.addAll(sourcesFromMainConfig);
         FDataSourceUtil.resolveSourceRefs(fsources);
-        FDataSourceUtil.checkDuplicityOnSourceRefs(fsources);
+        if ( checkDuplicity) FDataSourceUtil.checkDuplicityOnSourceRefs(fsources);
         return fsources;
     }
 
@@ -104,6 +105,16 @@ public class FDSourceAggregatorByXMLConfigImpl implements FDataSourceAssembler {
     }
 
     
+    public boolean isCheckDuplicity() {
+        return checkDuplicity;
+    }
+
+
+    public void setCheckDuplicity(boolean checkDuplicity) {
+        this.checkDuplicity = checkDuplicity;
+    }
+
+
     public List<FDataSource> initSourcesFromConfig(DataGenContext runContext, XMLConfiguration config) throws Exception {
         List<FDataSource> srcs = new ArrayList();
         
@@ -116,6 +127,7 @@ public class FDSourceAggregatorByXMLConfigImpl implements FDataSourceAssembler {
             String fieldName    = sub.getString("name");
             String display      = sub.getString("display");                
             String fieldType    = sub.getString("type");
+            String sourceType    = sub.getString("SourceType");
             String dataSet      = sub.getString("DataSet");
             boolean exclude     = sub.getBoolean("ExcludeInOutput", false);
             boolean disable     = sub.getBoolean("Disable", false);
@@ -136,9 +148,16 @@ public class FDSourceAggregatorByXMLConfigImpl implements FDataSourceAssembler {
             
             if ( dataSourceConfigs != null ) {
                 FDataSource dataSource = factory.createInstance(dataSourceConfigs);
-                dataSource.setFieldName(fieldName);
+                
+//                dataSource.setFieldName(fieldName);
                 dataSource.setRunId(runContext.getId(dataSet));
-                dataSource.setExcludeInOutput(exclude);
+//                dataSource.setExcludeInOutput(exclude);
+
+                BeanUtils.setProperty(dataSource, "fieldName", fieldName);
+                BeanUtils.setProperty(dataSource, "excludeInOutput", exclude);
+                BeanUtils.setProperty(dataSource, "fieldName", fieldName);
+                BeanUtils.setProperty(dataSource, "type", sourceType);
+                
                 srcs.add(dataSource);
                 m_logger.info (">> Source Created for [{}] loaded. display=[{}], SourceClass=[{}],excludeInOut=[{}]", fieldName, display, dataSource.getClass().getSimpleName(), exclude);
 
@@ -150,6 +169,6 @@ public class FDSourceAggregatorByXMLConfigImpl implements FDataSourceAssembler {
         return srcs;
     }
 
-
+    
     
 }

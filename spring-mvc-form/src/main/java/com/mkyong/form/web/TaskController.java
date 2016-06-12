@@ -77,13 +77,16 @@ public class TaskController {
     // delete user
     @RequestMapping(value = "/task/add", method = RequestMethod.POST)
     public String addTask(@ModelAttribute("taskForm") @Validated MyTask taskForm,  
-            BindingResult result,  Model model, final RedirectAttributes redirectAttributes ) {
+            BindingResult result,  
+            Model model, final 
+            RedirectAttributes redirectAttributes ) {
 
         logger.debug("addTask() : formTask {}", taskForm);
 //        logger.debug("addTask() : myTask   {}", task); // These two task are the same object from the FORM. 
         
         if (result.hasErrors()) {
             // common error redirect would lose the results
+            logger.info("Detected Binding Error");
             return "/task/start";
         }
         

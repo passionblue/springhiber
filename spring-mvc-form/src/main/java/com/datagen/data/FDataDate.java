@@ -17,28 +17,24 @@ public class FDataDate extends AbstractFData<Date> {
             data = obj.toString();
         }
     }    
-    
-//    public FDataString(Object obj) {
-//        this(null, obj);
-//    }
 
     @Override
     public Date getRawFormat() {
         return rawData;
     }
-
-    
     
     @Override
     public String getStringFormat() {
+
+        if( rawData == null) return null;
+        
         String str = new DateTime(rawData).toString(pattern);
         return str;
     }
 
     @Override
     public String toString() {
-        String str = new DateTime(rawData).toString(pattern);
-        return str;
+        return getStringFormat();
     }
     
 }

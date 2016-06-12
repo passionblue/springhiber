@@ -1,10 +1,12 @@
 package com.datagen.data;
 
+
+/*
+ * Not used at the time. Dont know what to do 
+ */
 public class FDataCustomComposite extends AbstractFData<String> {
 
     private String data;
-//    private String pattern;
-    
 
     @Override
     public String getRawFormat() {
@@ -21,9 +23,6 @@ public class FDataCustomComposite extends AbstractFData<String> {
 
     @Override
     public String getStringFormat() {
-        // TODO Auto-generated method stub
-        return null;
+        return data;
     }
-    
-    
 }

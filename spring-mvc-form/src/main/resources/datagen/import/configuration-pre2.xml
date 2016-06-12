@@ -1,6 +1,6 @@
 <DataGen>
 	<Version>1.0</Version>
-	<DataSetName>Customer2</DataSetName><!-- This required for PreloadDatabaseAdapter in main config -->
+	<DataSetName>Customer2</DataSetName><!-- This required for PreloadedInMemoryDataAdapter in main config -->
 	<ImportGenerate></ImportGenerate> <!--  -->
 	<Count>1000</Count> <!-- -1, unlimited, 0 is random -->
 	<Fields>

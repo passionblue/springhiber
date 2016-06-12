@@ -1,8 +1,8 @@
 <DataGen>
 	<Version>1.0</Version>
-	<DataSetName>Customer</DataSetName><!-- This required for PreloadDatabaseAdapter in main config -->
+	<DataSetName>Customer</DataSetName><!-- This required for PreloadedInMemoryDataAdapter in main config -->
 	<ImportGenerate></ImportGenerate> <!--  -->
-	<Count>10000</Count> <!-- -1, unlimited, 0 is random -->
+	<Count>100</Count> <!-- -1, unlimited, 0 is random -->
 	<Fields>
 
 		<Field>
@@ -63,7 +63,7 @@
 	<Outputs>
 		<Output>
 			<Type>MEMORY</Type>
-			<MaxCount>10</MaxCount>
+			<MaxCount>100</MaxCount>
 		</Output>
 	</Outputs>
 

@@ -44,10 +44,10 @@ public class FormatRowToFixedWidthString implements OutputRowChannelFormatter<St
                 FDataGroup group = (FDataGroup) fData;
                 List<FData> dataFields = group.getUnderlyingDatas();
                 for (FData fd : dataFields) {
-                    builder.append(convert(fd.getRawFormat().toString())).append(delimiter);
+                    builder.append(convert(fd.getStringFormat())).append(delimiter);
                 }
             } else {
-                builder.append(convert(fData.getRawFormat() == null?"":fData.getRawFormat().toString())).append(delimiter);
+                builder.append(convert(fData.getStringFormat() == null?"":fData.getStringFormat())).append(delimiter);
             }
         }
         

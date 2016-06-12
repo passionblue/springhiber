@@ -9,7 +9,6 @@ import com.datagen.configuration.FDConfigurator;
 import com.datagen.data.FDataNull;
 import com.datagen.data.FDataString;
 import com.datagen.data.group.FDataGroupImpl;
-import com.datagen.data.group.FDataStickyGroupImpl;
 import com.datagen.util.DataCopyUtil;
 import com.datagen.util.XmlConfigParameterUtil;
 
@@ -36,6 +35,12 @@ public class FDRandomMultipleFDLoadFromAdapter extends AbstractDataSource {
     public FData nextFData() {
         
         int max = dataAdapter.getDataSize();
+        
+        if ( max == 0 ) {
+            throw new IllegalStateException("Preloaded data size is 0, Check the source data adapter configuration for for adapter " + dataAdapter.getClass().getName());
+        }
+        
+        
         Object data = dataAdapter.getByPosition(RandomUtils.nextInt(0, max));
         
         if ( data instanceof String) 
@@ -114,8 +119,4 @@ public class FDRandomMultipleFDLoadFromAdapter extends AbstractDataSource {
     public void setStickTogether(boolean stickTogether) {
         this.stickTogether = stickTogether;
     }
-
-
-    
-    
 }

@@ -16,12 +16,12 @@ public class FDSourceReference extends AbstractDataSource {
     }
 
     @Override
-    FData nextFData() {
+    public FData nextFData() {
         return ((AbstractDataSource)sourceRef).nextFData();
     }
 
     @Override
-    FData nextFData(Object arg) {
+    public FData nextFData(Object arg) {
         return ((AbstractDataSource)sourceRef).nextFData(arg);
     }
 

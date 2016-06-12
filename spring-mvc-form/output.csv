@@ -1,2 +1,6 @@
-Member ID,Year,Nick Name,Last Name(0),Last Name(1),Email Carrier,Credit Card,Prefix2,First Name2,Last Name2,Prefix3,Pattern Test,Email
-AFegZ,2011,Ron,WATKINS,1.35,hotmail.com,9174527763333492,Ms,-NndqVa-,John,XMrs,-NndqVa- John XMrs,-NndqVa-.John@hotmail.com
+Member ID,Year,Nick Name,Last Name Sticky(0),Last Name Sticky(1),Last Name,Last Name,Email Carrier,Credit Card,Test Seq,Prefix2,First Name2,Last Name2,Prefix3,Pattern Test,Email
+ARRlzzjtkwZ,2023,Samuel,HOPPER,1.87,STOVER,1.39,blah.com,6339430590095869,"SEQ="0000000000,Mrs,-tbUe-,Jacob,XMs,-tbUe- Jacob XMs,-tbUe-.Jacob@blah.com
+AaNpfhFZ,2013,Andrew,LOWRY,1.62,PATRICK,1.45,gmail.com,1270365618572184,"SEQ="0000000001,Mr,-pTgdn-,Liam,XMrs,-pTgdn- Liam XMrs,-pTgdn-.Liam@gmail.com
+AAZ,2018,Andrew,BRIGHT,1.44,LEAL,83.02,blah.com,210245401719716,"SEQ="0000000002,Ms,-uNi-,Liam,XMs,-uNi- Liam XMs,-uNi-.Liam@blah.com
+AbzaXgPVZ,2015,Aiden,MCKNIGHT,1.24,MERRILL,1.54,gmail.com,1750474655960407,"SEQ="0000000003,Mrs,-UKDMt-,Jacob,XMs,-UKDMt- Jacob XMs,-UKDMt-.Jacob@gmail.com
+AvAKZ,2022,Carter,VALENCIA,88.02,KINNEY,1.49,gmail.com,1800736437221796,"SEQ="0000000004,Mr,-pTgdn-,Liam,XMs,-pTgdn- Liam XMs,-pTgdn-.Liam@gmail.com

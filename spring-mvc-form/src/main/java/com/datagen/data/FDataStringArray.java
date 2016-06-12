@@ -1,5 +1,7 @@
 package com.datagen.data;
 
+import com.datagen.source.util.FDStringUtil;
+
 public class FDataStringArray extends AbstractFData<String[]> {
 
     private String data[];
@@ -20,13 +22,8 @@ public class FDataStringArray extends AbstractFData<String[]> {
         return "FDataString [data=" + data + "]";
     }
 
-
     @Override
     public String getStringFormat() {
-        // TODO Auto-generated method stub
-        return null;
+        return FDStringUtil.toString(data);
     }
-    
-    
-    
 }

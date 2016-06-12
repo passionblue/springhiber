@@ -40,4 +40,9 @@ public class FDataRegexField extends FDataCustomComposite {
         return retData;
     }
 
+    @Override
+    public String getStringFormat() {
+        return getRawFormat();
+    }
+
 }
